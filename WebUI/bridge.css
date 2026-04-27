@@ -1,0 +1,192 @@
+/* =====================================================================
+   Bridge UI — Design System
+   Obsidian + Electric Gold. Premium dark admin/dashboard language.
+   ===================================================================== */
+
+:root {
+    --obsidian:   #191919;
+    --page-bg:    #0F0F0F;
+    --electric:   #E5B96C;
+    --goldlight:  #F9D98C;
+    --golddeep:   #D4A04B;
+    --cloud:      #F8FAFC;
+    --success:    #10B981;
+    --danger:     #EF4444;
+
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-soft:   rgba(255, 255, 255, 0.10);
+    --surface-1:     rgba(25, 25, 25, 0.80);
+    --surface-2:     rgba(255, 255, 255, 0.04);
+}
+
+html, body {
+    background-color: var(--page-bg);
+    color: var(--cloud);
+}
+
+::selection {
+    background: rgba(229, 185, 108, 0.35);
+    color: var(--cloud);
+}
+
+/* ---------------------------------------------------------------------
+   Surfaces — bridge-card / glass-panel are aliased so existing markup
+   automatically upgrades to the new look.
+--------------------------------------------------------------------- */
+.glass-panel,
+.bridge-card {
+    background: var(--surface-1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+}
+
+/* ---------------------------------------------------------------------
+   Typography — gradient headings + mono micro-labels
+--------------------------------------------------------------------- */
+.gradient-text {
+    background: linear-gradient(135deg, #E5B96C 0%, #D4A04B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.mono-label {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------
+   Borders — gold-tinted gradient border (re-skin of existing class)
+--------------------------------------------------------------------- */
+.gradient-border {
+    position: relative;
+    background: rgba(25, 25, 25, 0.80);
+    background-clip: padding-box;
+    border: 1px solid transparent;
+    border-radius: 1rem;
+}
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #E5B96C, #D4A04B);
+    opacity: 0.30;
+    transition: opacity 0.3s ease;
+}
+.gradient-border:hover::before { opacity: 1; }
+
+/* ---------------------------------------------------------------------
+   Buttons — gold CTA (primary)
+--------------------------------------------------------------------- */
+.gold-cta {
+    background: linear-gradient(135deg, #E5B96C 0%, #F9D98C 100%);
+    color: #191919 !important;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.gold-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px -10px rgba(229, 185, 108, 0.55);
+}
+.gold-cta i,
+.gold-cta svg { color: #191919; }
+
+/* ---------------------------------------------------------------------
+   Inputs
+--------------------------------------------------------------------- */
+.bridge-input {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    color: var(--cloud);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.bridge-input::placeholder { color: #6B7280; }
+.bridge-input:focus {
+    outline: none;
+    border-color: var(--electric);
+    box-shadow: 0 0 0 3px rgba(229, 185, 108, 0.18);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ---------------------------------------------------------------------
+   Sidebar nav
+--------------------------------------------------------------------- */
+.sidebar-link {
+    border-left: 2px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.sidebar-link:hover { color: var(--electric); }
+.sidebar-link.active {
+    background: rgba(229, 185, 108, 0.08);
+    border-left-color: var(--electric);
+    color: var(--electric);
+}
+.sidebar-link.active i,
+.sidebar-link.active svg { color: var(--electric); }
+
+/* ---------------------------------------------------------------------
+   Aurora background — replaces the old animated purple/cyan blobs
+--------------------------------------------------------------------- */
+.aurora-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.aurora-bg::before,
+.aurora-bg::after {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    filter: blur(120px);
+}
+.aurora-bg::before {
+    top: -25%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(229, 185, 108, 0.06), transparent 60%);
+}
+.aurora-bg::after {
+    bottom: -25%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.05), transparent 60%);
+}
+
+/* ---------------------------------------------------------------------
+   Elevation / glow utilities
+--------------------------------------------------------------------- */
+.glow-elev {
+    box-shadow: 0 0 40px -10px rgba(229, 185, 108, 0.25);
+}
+.glow-strong {
+    box-shadow: 0 0 60px -10px rgba(229, 185, 108, 0.45);
+}
+
+/* Soft pulse for urgent/critical cards (Bridge motion guideline) */
+@keyframes bridge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(229, 185, 108, 0.20); }
+    50%      { box-shadow: 0 0 0 12px rgba(229, 185, 108, 0); }
+}
+.pulse-attention { animation: bridge-pulse 2.4s ease-in-out infinite; }
+
+/* ---------------------------------------------------------------------
+   Scrollbar polish (subtle, gold-on-hover)
+--------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(229, 185, 108, 0.35); }
