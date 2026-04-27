@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Media - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'blob-slow': 'blob 15s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030712;
+            color: #f9fafb;
+            overflow: hidden; /* Prevent body scroll, handle scroll in main content */
+        }
+        
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-purple-500 selection:text-white h-screen flex">
+
+    <!-- Ambient Background Blobs (Dimmer for Dashboard to not distract from data) -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-[-10%] left-[-5%] w-[800px] h-[800px] bg-purple-600/10 rounded-full mix-blend-screen filter blur-[150px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[800px] h-[800px] bg-cyan-600/10 rounded-full mix-blend-screen filter blur-[150px] animate-blob-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="w-64 glass-panel border-r border-white/5 hidden md:flex flex-col relative z-20">
+        <!-- Logo -->
+        <div class="h-20 flex items-center px-6 border-b border-white/5">
+            <div class="flex items-center gap-2 cursor-pointer w-fit" onclick="window.location.href='index.html'">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center p-0.5 shadow-lg shadow-purple-500/20">
+                    <div class="w-full h-full bg-gray-950 rounded-[6px] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-white">AISocial</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Menu</p>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 text-white font-medium border border-purple-500/20">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-purple-400"></i>
+                Dashboard
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                Calendar
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="layout-template" class="w-5 h-5"></i>
+                Templates
+            </a>
+
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="folder-open" class="w-5 h-5"></i>
+                Media Library
+            </a>
+
+            <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-2">Account</p>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="link" class="w-5 h-5"></i>
+                Connections
+            </a>
+
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Settings
+            </a>
+        </nav>
+
+        <!-- CTA / Upgrade -->
+        <div class="p-4 border-t border-white/5">
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-900/40 to-cyan-900/40 border border-white/10 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/30 rounded-full blur-xl pointer-events-none"></div>
+                <h4 class="text-sm font-bold text-white mb-1">Local Renderer</h4>
+                <p class="text-xs text-gray-400 mb-3">Wan 2.1 & LTX-2.3 Online</p>
+                <div class="flex items-center gap-2 text-xs text-green-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    API Connected
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col relative z-10 overflow-hidden">
+        
+        <!-- Top Header -->
+        <header class="h-20 glass-panel border-b border-white/5 flex items-center justify-between px-6 lg:px-10 z-20">
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2 text-gray-400 hover:text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Search -->
+            <div class="hidden md:flex items-center flex-1 max-w-md">
+                <div class="relative w-full">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                    <input type="text" placeholder="Search posts, templates, or media..." class="w-full bg-black/40 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all">
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-4 ml-auto">
+                <!-- Create Post Button (Primary) -->
+                <button class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
+                    <i data-lucide="wand-2" class="w-4 h-4"></i>
+                    Create Post
+                </button>
+
+                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-pink-500 border-2 border-[#030712]"></span>
+                </button>
+                
+                <div class="h-8 w-px bg-white/10 mx-1"></div>
+                
+                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">
+                        N
+                    </div>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Main Area -->
+        <main class="flex-1 overflow-y-auto p-6 lg:p-10 relative">
+            <div class="max-w-6xl mx-auto space-y-8">
+                
+                <!-- Greeting -->
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white mb-1">Welcome back, <span class="gradient-text">Neutron</span></h1>
+                        <p class="text-gray-400">Your AI rendering station is online and ready.</p>
+                    </div>
+                    <div class="text-sm text-gray-500 font-medium bg-white/5 px-4 py-2 rounded-xl border border-white/5 w-fit">
+                        <i data-lucide="calendar" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Monday, April 27, 2026
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Stat 1 -->
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium mb-1">Posts Scheduled</p>
+                                <h3 class="text-3xl font-bold text-white">12</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                                <i data-lucide="calendar-check" class="w-5 h-5 text-purple-400"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-green-400 font-medium flex items-center gap-1 relative z-10">
+                            <i data-lucide="trending-up" class="w-3 h-3"></i> +4 from last week
+                        </p>
+                    </div>
+
+                    <!-- Stat 2 -->
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-cyan-500/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium mb-1">AI Credits (GPU Time)</p>
+                                <h3 class="text-3xl font-bold text-white">840<span class="text-lg text-gray-500 font-normal">/1000</span></h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
+                                <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+                            </div>
+                        </div>
+                        <!-- Progress bar -->
+                        <div class="w-full h-1.5 bg-gray-800 rounded-full mt-3 overflow-hidden relative z-10">
+                            <div class="h-full bg-cyan-400 rounded-full" style="width: 84%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 3 -->
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-pink-500/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium mb-1">Connected Accounts</p>
+                                <h3 class="text-3xl font-bold text-white">3</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center border border-pink-500/30">
+                                <i data-lucide="link" class="w-5 h-5 text-pink-400"></i>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-2 relative z-10">
+                            <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white"></i></div>
+                            <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center"><i data-lucide="twitter" class="w-3 h-3 text-white"></i></div>
+                            <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                                <svg class="w-3 h-3 fill-current text-white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Split -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left Column (Wider): Upcoming Posts Queue -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                                <i data-lucide="clock-4" class="w-5 h-5 text-cyan-400"></i>
+                                Upcoming Queue
+                            </h2>
+                            <button class="text-sm text-gray-400 hover:text-white transition-colors">View Calendar</button>
+                        </div>
+
+                        <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+                            <!-- Queue Item 1 -->
+                            <div class="p-4 sm:p-5 border-b border-white/5 hover:bg-white/5 transition-colors flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                <!-- Thumbnail Mock -->
+                                <div class="w-24 h-32 sm:w-20 sm:h-28 flex-shrink-0 rounded-xl bg-gray-900 border border-white/10 overflow-hidden relative group cursor-pointer">
+                                    <div class="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-cyan-900/40 opacity-50"></div>
+                                    <i data-lucide="image" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-white/50"></i>
+                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <i data-lucide="play" class="w-8 h-8 text-white"></i>
+                                    </div>
+                                    <div class="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/70 rounded text-[10px] font-mono text-white">00:12</div>
+                                </div>
+                                
+                                <!-- Post Details -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/50 border border-white/10 text-white">
+                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                                            TikTok
+                                        </div>
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-medium">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Scheduled
+                                        </span>
+                                    </div>
+                                    <h4 class="text-white font-semibold truncate mb-1">Cyberpunk City Drone Shot</h4>
+                                    <p class="text-sm text-gray-500 truncate mb-2">Engine: Wan 2.1 (9:16 Portrait)</p>
+                                    <div class="text-xs font-medium text-gray-400 flex items-center gap-1.5">
+                                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Today at 3:00 PM
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions -->
+                                <div class="flex sm:flex-col gap-2 w-full sm:w-auto mt-2 sm:mt-0 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0">
+                                    <button class="flex-1 sm:flex-none p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors border border-white/5 tooltip flex justify-center" title="Edit Post">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="flex-1 sm:flex-none p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-red-400 transition-colors border border-white/5 tooltip flex justify-center" title="Cancel Scheduled Post">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Queue Item 2 (Rendering State) -->
+                            <div class="p-4 sm:p-5 border-b border-white/5 hover:bg-white/5 transition-colors flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                <div class="w-24 h-32 sm:w-20 sm:h-28 flex-shrink-0 rounded-xl bg-gray-900 border border-purple-500/30 overflow-hidden relative flex flex-col justify-end p-2">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent"></div>
+                                    <i data-lucide="cpu" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-purple-400 animate-pulse"></i>
+                                    <div class="w-full h-1 bg-black/50 rounded-full relative z-10 overflow-hidden">
+                                        <div class="h-full bg-purple-500 w-[45%]"></div>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/50 border border-white/10 text-white">
+                                            <i data-lucide="instagram" class="w-3 h-3 text-pink-500"></i>
+                                            Reels
+                                        </div>
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-medium">
+                                            <i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Rendering locally...
+                                        </span>
+                                    </div>
+                                    <h4 class="text-white font-semibold truncate mb-1">Morning Coffee B-Roll</h4>
+                                    <p class="text-sm text-gray-500 truncate mb-2">Engine: LTX-2.3 (Fast)</p>
+                                    <div class="text-xs font-medium text-gray-400 flex items-center gap-1.5">
+                                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Tomorrow at 9:00 AM
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Queue Item 3 -->
+                            <div class="p-4 sm:p-5 hover:bg-white/5 transition-colors flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                <div class="w-24 h-24 sm:w-20 sm:h-20 flex-shrink-0 rounded-xl bg-gray-900 border border-white/10 overflow-hidden relative group cursor-pointer">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-80"></div>
+                                    <i data-lucide="type" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-white/50"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/50 border border-white/10 text-white">
+                                            <i data-lucide="twitter" class="w-3 h-3"></i>
+                                            X Post
+                                        </div>
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-medium">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Scheduled
+                                        </span>
+                                    </div>
+                                    <h4 class="text-white font-semibold truncate mb-1">AI Setup Behind the Scenes</h4>
+                                    <p class="text-sm text-gray-500 truncate mb-2">Text + Image Generation</p>
+                                    <div class="text-xs font-medium text-gray-400 flex items-center gap-1.5">
+                                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Friday at 1:00 PM
+                                    </div>
+                                </div>
+                                <div class="flex sm:flex-col gap-2 w-full sm:w-auto mt-2 sm:mt-0 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0">
+                                    <button class="flex-1 sm:flex-none p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors border border-white/5 tooltip flex justify-center">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="flex-1 sm:flex-none p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-red-400 transition-colors border border-white/5 tooltip flex justify-center">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Empty state mock for bottom of list -->
+                        <button class="w-full py-4 border border-dashed border-white/20 rounded-2xl text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-2">
+                            <i data-lucide="plus-circle" class="w-6 h-6"></i>
+                            <span class="text-sm font-medium">Schedule another post</span>
+                        </button>
+                    </div>
+
+                    <!-- Right Column (Narrower): Quick Actions & System Info -->
+                    <div class="space-y-6">
+                        
+                        <!-- Quick Actions -->
+                        <div>
+                            <h2 class="text-xl font-bold text-white mb-4">Quick Actions</h2>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-purple-500/50">
+                                    <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
+                                        <i data-lucide="video" class="w-5 h-5 text-purple-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-300">New Video</span>
+                                </button>
+                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-cyan-500/50">
+                                    <div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                                        <i data-lucide="layout-template" class="w-5 h-5 text-cyan-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-300">Create Template</span>
+                                </button>
+                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-pink-500/50">
+                                    <div class="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center">
+                                        <i data-lucide="image-plus" class="w-5 h-5 text-pink-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-300">Upload Hero Image</span>
+                                </button>
+                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-blue-500/50">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+                                        <i data-lucide="users" class="w-5 h-5 text-blue-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-300">Connect Social</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Local Server Status Widget -->
+                        <div class="glass-panel p-5 rounded-2xl border border-white/5">
+                            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Hardware Monitor</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- VRAM Usage -->
+                                <div>
+                                    <div class="flex justify-between text-xs font-medium mb-1">
+                                        <span class="text-gray-300">GPU VRAM (RTX 3090)</span>
+                                        <span class="text-white">16.2 / 24 GB</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500" style="width: 67%"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- System RAM -->
+                                <div>
+                                    <div class="flex justify-between text-xs font-medium mb-1">
+                                        <span class="text-gray-300">System RAM</span>
+                                        <span class="text-white">42 / 128 GB</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-cyan-500" style="width: 32%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-white/5 text-xs text-gray-500 flex items-start gap-2">
+                                <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                                <p>System is currently rendering 1 video job. Plenty of VRAM available for a new Image-to-Video task.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recent Templates list -->
+                        <div class="glass-panel p-5 rounded-2xl border border-white/5">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Your Templates</h3>
+                                <button class="text-xs text-cyan-400 hover:text-cyan-300">View All</button>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+                                    <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400">
+                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-white">TikTok Fast Trend</p>
+                                        <p class="text-[10px] text-gray-500">LTX-2.3 • 9:16 Portrait</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+                                    <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400">
+                                        <i data-lucide="film" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-white">Cinematic B-Roll</p>
+                                        <p class="text-[10px] text-gray-500">Wan 2.1 14B • High Quality</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Footer spacing -->
+                <div class="h-12"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Navigation Bar (Bottom) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full glass-panel border-t border-white/10 z-50 px-6 py-3 flex justify-between items-center pb-safe">
+        <a href="#" class="flex flex-col items-center text-purple-400 gap-1">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="calendar-days" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Schedule</span>
+        </a>
+        <!-- Floating FAB for Mobile -->
+        <div class="relative -top-5">
+            <button class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] border-4 border-[#030712]">
+                <i data-lucide="plus" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="layout-template" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Templates</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Settings</span>
+        </a>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

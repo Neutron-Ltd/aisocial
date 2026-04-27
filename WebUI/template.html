@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Media - Template Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'blob-slow': 'blob 15s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030712;
+            color: #f9fafb;
+            overflow: hidden; 
+        }
+        
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* Resolution Selectable Cards */
+        .res-card.active {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+        }
+        
+        /* Syntax highlighting mock for the summary JSON */
+        .json-key { color: #a855f7; }
+        .json-val { color: #06b6d4; }
+        .json-str { color: #34d399; }
+    </style>
+</head>
+<body class="antialiased selection:bg-purple-500 selection:text-white h-screen flex">
+
+    <!-- Ambient Background Blobs -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[10%] left-[10%] w-[500px] h-[500px] bg-cyan-600/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="w-64 glass-panel border-r border-white/5 hidden md:flex flex-col relative z-20">
+        <div class="h-20 flex items-center px-6 border-b border-white/5">
+            <div class="flex items-center gap-2 cursor-pointer w-fit" onclick="window.location.href='index.html'">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center p-0.5 shadow-lg shadow-purple-500/20">
+                    <div class="w-full h-full bg-gray-950 rounded-[6px] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-white">AISocial</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Menu</p>
+            
+            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </a>
+            
+            <a href="create_post.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="wand-2" class="w-5 h-5"></i>
+                Create Post
+            </a>
+
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                Calendar
+            </a>
+            
+            <!-- Highlighted to show active state -->
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 text-white font-medium border border-purple-500/20">
+                <i data-lucide="layout-template" class="w-5 h-5 text-purple-400"></i>
+                Templates
+            </a>
+
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="folder-open" class="w-5 h-5"></i>
+                Media Library
+            </a>
+
+            <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-2">Account</p>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                <i data-lucide="link" class="w-5 h-5"></i>
+                Connections
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/5">
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-900/40 to-cyan-900/40 border border-white/10 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/30 rounded-full blur-xl pointer-events-none"></div>
+                <h4 class="text-sm font-bold text-white mb-1">Local Renderer</h4>
+                <p class="text-xs text-gray-400 mb-3">Wan 2.1 & LTX-2.3 Online</p>
+                <div class="flex items-center gap-2 text-xs text-green-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    API Connected
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col relative z-10 overflow-hidden">
+        
+        <!-- Top Header -->
+        <header class="h-20 glass-panel border-b border-white/5 flex items-center justify-between px-6 lg:px-10 z-20 shrink-0">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden p-2 text-gray-400 hover:text-white">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-400">
+                    <a href="dashboard.html" class="hover:text-white transition-colors">Dashboard</a>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    <span class="text-purple-400 font-medium">Template Builder</span>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-4 ml-auto">
+                <button onclick="window.location.href='create_post.html'" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    New Post
+                </button>
+                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+                <div class="h-8 w-px bg-white/10 mx-1"></div>
+                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Builder Area -->
+        <main class="flex-1 overflow-y-auto p-4 lg:p-8 relative">
+            <div class="max-w-6xl mx-auto">
+                
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">Build Custom Template</h1>
+                    <p class="text-gray-400">Configure default parameters to save time during content creation. We'll abstract these into a ComfyUI JSON payload.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left Column: Configuration Forms (Takes up 2/3) -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- General Info -->
+                        <div class="glass-panel p-6 sm:p-8 rounded-[2rem]">
+                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                <i data-lucide="info" class="w-5 h-5 text-purple-400"></i> General Information
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-1.5">Template Name</label>
+                                    <input type="text" placeholder="e.g., Cyberpunk TikTok Trend" value="My Cinematic Style" class="w-full input-field rounded-xl p-3 text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-1.5">Description (Internal use)</label>
+                                    <input type="text" placeholder="What is this template best used for?" value="High quality 9:16 slow-motion b-roll for Instagram Reels." class="w-full input-field rounded-xl p-3 text-white text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engine & Resolution -->
+                        <div class="glass-panel p-6 sm:p-8 rounded-[2rem]">
+                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i> AI Engine & Formatting
+                            </h2>
+                            
+                            <div class="space-y-8">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-3">Base Model / Engine</label>
+                                    <div class="relative">
+                                        <select class="w-full input-field rounded-xl p-4 text-white appearance-none cursor-pointer font-medium border-white/20">
+                                            <option>Wan 2.1 (14B) - Cinematic Video [Recommended]</option>
+                                            <option selected>LTX-2.3 - Fast Social Media Video</option>
+                                            <option>Flux.1 [dev] - High-Res Static Image</option>
+                                        </select>
+                                        <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2 ml-1">LTX-2.3 is highly optimized for rapid generation and natively understands portrait logic.</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-3">Resolution & Aspect Ratio</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        
+                                        <!-- Portrait -->
+                                        <div class="res-card active p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '9:16')">
+                                            <div class="w-10 h-16 border-2 border-current rounded mx-auto mb-3 text-cyan-400 group-hover:scale-105 transition-transform flex items-center justify-center">
+                                                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                                            </div>
+                                            <h4 class="font-bold text-white text-sm mb-0.5">Vertical Video</h4>
+                                            <p class="text-[10px] text-gray-400 uppercase tracking-widest">9:16 (TikTok / IG)</p>
+                                        </div>
+
+                                        <!-- Square -->
+                                        <div class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '1:1')">
+                                            <div class="w-12 h-12 border-2 border-current rounded mx-auto mb-5 mt-2 text-gray-500 group-hover:scale-105 transition-transform flex items-center justify-center">
+                                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                                            </div>
+                                            <h4 class="font-bold text-white text-sm mb-0.5">Square Post</h4>
+                                            <p class="text-[10px] text-gray-400 uppercase tracking-widest">1:1 (Classic Feed)</p>
+                                        </div>
+
+                                        <!-- Landscape -->
+                                        <div class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '16:9')">
+                                            <div class="w-16 h-10 border-2 border-current rounded mx-auto mb-6 mt-3 text-gray-500 group-hover:scale-105 transition-transform flex items-center justify-center">
+                                                <i data-lucide="monitor-play" class="w-5 h-5"></i>
+                                            </div>
+                                            <h4 class="font-bold text-white text-sm mb-0.5">Landscape</h4>
+                                            <p class="text-[10px] text-gray-400 uppercase tracking-widest">16:9 (YouTube)</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt Engineering Defaults -->
+                        <div class="glass-panel p-6 sm:p-8 rounded-[2rem]">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                                    <i data-lucide="code-2" class="w-5 h-5 text-pink-400"></i> Prompt Logic
+                                </h2>
+                                <span class="px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-400 text-xs font-bold uppercase tracking-wider border border-pink-500/20">Advanced</span>
+                            </div>
+                            
+                            <p class="text-sm text-gray-400 mb-6">These will be automatically prepended or appended to any prompt you write when using this template. Great for locking in a specific aesthetic.</p>
+
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Base Style Prompt (Appended)</label>
+                                    <textarea rows="3" class="w-full input-field rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono" placeholder="e.g. cinematic lighting, 8k resolution, highly detailed, octane render...">cinematic lighting, 8k resolution, highly detailed, slow motion, professional color grading, shot on RED camera</textarea>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2 text-red-400">Universal Negative Prompt</label>
+                                    <textarea rows="3" class="w-full input-field rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono border-red-500/30 focus:border-red-500 focus:ring-1 focus:ring-red-500" placeholder="e.g. low quality, blurry, distorted text...">lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, distorted, glitch</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Column: Summary & Save (Takes up 1/3, sticky on desktop) -->
+                    <div class="lg:col-span-1">
+                        <div class="sticky top-6 space-y-6">
+                            
+                            <!-- Save Action Card -->
+                            <div class="glass-panel p-6 rounded-2xl border border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]">
+                                <h3 class="text-lg font-bold text-white mb-2">Ready to compile?</h3>
+                                <p class="text-xs text-gray-400 mb-6">Saving this template will generate a ComfyUI JSON workflow in the database, ready to be triggered via API.</p>
+                                
+                                <button onclick="saveTemplate()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-bold hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mb-3">
+                                    <i data-lucide="save" class="w-4 h-4"></i> Save Template
+                                </button>
+                                <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors text-sm">
+                                    Cancel
+                                </button>
+                            </div>
+
+                            <!-- "Behind the Scenes" Code Mockup -->
+                            <div class="glass-panel rounded-2xl border border-white/5 overflow-hidden flex flex-col h-[350px]">
+                                <div class="bg-black/60 border-b border-white/5 p-3 flex items-center gap-2 shrink-0">
+                                    <i data-lucide="file-json" class="w-4 h-4 text-gray-500"></i>
+                                    <span class="text-xs font-mono text-gray-400">Generated Payload Preview</span>
+                                </div>
+                                <div class="p-4 overflow-y-auto flex-1 bg-[#0d1117] font-mono text-[10px] sm:text-xs leading-relaxed">
+<pre><code><span class="text-gray-500">{</span>
+  <span class="json-key">"name"</span><span class="text-gray-500">:</span> <span class="json-str">"My Cinematic Style"</span><span class="text-gray-500">,</span>
+  <span class="json-key">"engine"</span><span class="text-gray-500">:</span> <span class="json-str">"LTX-2.3-FP8"</span><span class="text-gray-500">,</span>
+  <span class="json-key">"comfyui_workflow"</span><span class="text-gray-500">: {</span>
+    <span class="json-key">"3"</span><span class="text-gray-500">: {</span>
+      <span class="json-key">"class_type"</span><span class="text-gray-500">:</span> <span class="json-str">"KSampler"</span><span class="text-gray-500">,</span>
+      <span class="json-key">"inputs"</span><span class="text-gray-500">: {</span>
+        <span class="json-key">"seed"</span><span class="text-gray-500">:</span> <span class="json-val">-1</span><span class="text-gray-500">,</span>
+        <span class="json-key">"steps"</span><span class="text-gray-500">:</span> <span class="json-val">20</span><span class="text-gray-500">,</span>
+        <span class="json-key">"cfg"</span><span class="text-gray-500">:</span> <span class="json-val">3.5</span><span class="text-gray-500">,</span>
+        <span class="json-key">"sampler_name"</span><span class="text-gray-500">:</span> <span class="json-str">"euler"</span><span class="text-gray-500">,</span>
+        <span class="json-key">"scheduler"</span><span class="text-gray-500">:</span> <span class="json-str">"normal"</span>
+      <span class="text-gray-500">}</span>
+    <span class="text-gray-500">},</span>
+    <span class="json-key">"5"</span><span class="text-gray-500">: {</span>
+      <span class="json-key">"class_type"</span><span class="text-gray-500">:</span> <span class="json-str">"EmptyLatentVideo"</span><span class="text-gray-500">,</span>
+      <span class="json-key">"inputs"</span><span class="text-gray-500">: {</span>
+        <span class="json-key">"width"</span><span class="text-gray-500">:</span> <span id="json-w" class="json-val">1080</span><span class="text-gray-500">,</span>
+        <span class="json-key">"height"</span><span class="text-gray-500">:</span> <span id="json-h" class="json-val">1920</span><span class="text-gray-500">,</span>
+        <span class="json-key">"length"</span><span class="text-gray-500">:</span> <span class="json-val">48</span><span class="text-gray-500">,</span>
+        <span class="json-key">"batch_size"</span><span class="text-gray-500">:</span> <span class="json-val">1</span>
+      <span class="text-gray-500">}</span>
+    <span class="text-gray-500">}</span>
+    <span class="text-gray-500">// ... abstracted nodes ...</span>
+  <span class="text-gray-500">}</span>
+<span class="text-gray-500">}</span></code></pre>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center text-xs text-gray-500 flex items-center justify-center gap-1.5 mt-4">
+                                <i data-lucide="lock" class="w-3 h-3"></i> Safely encrypted in PostgreSQL
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="h-20"></div> <!-- Bottom padding -->
+        </main>
+    </div>
+
+    <!-- Mobile Navigation Bar (Bottom) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full glass-panel border-t border-white/10 z-50 px-6 py-3 flex justify-between items-center pb-safe">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="calendar.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="calendar-days" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Schedule</span>
+        </a>
+        <div class="relative -top-5" onclick="window.location.href='create_post.html'">
+            <button class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] border-4 border-[#030712]">
+                <i data-lucide="plus" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <a href="#" class="flex flex-col items-center text-purple-400 gap-1">
+            <i data-lucide="layout-template" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Templates</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Settings</span>
+        </a>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Handle Resolution Selection & update the mock JSON preview dynamically
+        function selectResolution(element, ratio) {
+            // Remove active classes from all cards
+            document.querySelectorAll('.res-card').forEach(el => {
+                el.classList.remove('active');
+                
+                // Reset icon colors
+                const iconContainer = el.querySelector('div');
+                iconContainer.classList.remove('text-cyan-400');
+                iconContainer.classList.add('text-gray-500');
+            });
+
+            // Add active class to clicked card
+            element.classList.add('active');
+            
+            // Highlight icon
+            const iconContainer = element.querySelector('div');
+            iconContainer.classList.remove('text-gray-500');
+            iconContainer.classList.add('text-cyan-400');
+
+            // Update JSON preview mock
+            const wNode = document.getElementById('json-w');
+            const hNode = document.getElementById('json-h');
+
+            if (ratio === '9:16') {
+                wNode.innerText = '1080';
+                hNode.innerText = '1920';
+            } else if (ratio === '1:1') {
+                wNode.innerText = '1080';
+                hNode.innerText = '1080';
+            } else if (ratio === '16:9') {
+                wNode.innerText = '1920';
+                hNode.innerText = '1080';
+            }
+        }
+
+        function saveTemplate() {
+            // Simple visual feedback for the prototype
+            const btn = document.querySelector('button[onclick="saveTemplate()"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Compiling...';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Saved Successfully';
+                btn.classList.replace('from-purple-600', 'from-green-600');
+                btn.classList.replace('to-cyan-600', 'to-emerald-500');
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.replace('from-green-600', 'from-purple-600');
+                    btn.classList.replace('to-emerald-500', 'to-cyan-600');
+                    lucide.createIcons();
+                }, 2000);
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
