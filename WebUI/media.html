@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEUTX — Media Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="bridge.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        obsidian:  '#191919',
+                        electric:  '#E5B96C',
+                        goldlight: '#F9D98C',
+                        golddeep:  '#D4A04B',
+                        cloud:     '#F8FAFC',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { overflow: hidden; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.25s ease;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(229, 185, 108, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Media item thumbnail */
+        .media-item {
+            position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .media-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px -8px rgba(229, 185, 108, 0.35);
+        }
+        .media-item:hover .media-overlay { opacity: 1; }
+        .media-item.selected {
+            outline: 2px solid #E5B96C;
+            outline-offset: 2px;
+        }
+        .media-overlay {
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        /* Filter pill buttons */
+        .filter-pill.active {
+            background: rgba(229, 185, 108, 0.15);
+            border-color: rgba(229, 185, 108, 0.4);
+            color: #E5B96C;
+        }
+
+        /* Drop zone hover */
+        .upload-dropzone {
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+        .upload-dropzone:hover {
+            border-color: rgba(229, 185, 108, 0.45);
+            background: rgba(229, 185, 108, 0.04);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-electric/40 selection:text-cloud h-screen flex">
+
+    <!-- Aurora Background (Bridge UI) -->
+    <div class="aurora-bg"></div>
+
+    <div id="bridge-nav-backdrop" class="bridge-nav-backdrop fixed inset-0 z-[60] md:hidden" aria-hidden="true"></div>
+
+    <!-- Sidebar (Desktop + mobile drawer) -->
+    <aside id="bridge-sidebar" class="w-64 glass-panel border-r border-white/5 flex flex-col fixed inset-y-0 left-0 z-[70] h-full -translate-x-full transition-transform duration-200 ease-out shadow-2xl shadow-black/50 md:static md:inset-auto md:h-auto md:translate-x-0 md:shadow-none md:z-20">
+        <!-- Logo -->
+        <div class="h-20 flex items-center px-6 border-b border-white/5">
+            <div class="flex items-center gap-2.5 cursor-pointer w-fit" onclick="window.location.href='index.html'">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-electric to-goldlight flex items-center justify-center p-0.5 shadow-lg shadow-electric/30">
+                    <div class="w-full h-full bg-obsidian rounded-[6px] flex items-center justify-center">
+                        <i data-lucide="atom" class="w-[18px] h-[18px] text-electric"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-base font-extrabold tracking-[0.18em] text-cloud">NEUTX</span>
+                    <span class="font-mono text-[0.58rem] uppercase tracking-wider text-gray-500 mt-1">Neutron Text-to-X</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <p class="mono-label px-2 mb-2">Menu</p>
+            
+            <a href="dashboard.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </a>
+            
+            <a href="studio.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="wand-2" class="w-5 h-5"></i>
+                Create Post
+            </a>
+
+            <a href="calendar.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                Calendar
+            </a>
+            
+            <a href="template.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="layout-template" class="w-5 h-5"></i>
+                Templates
+            </a>
+
+            <!-- Highlighted to show active state -->
+            <a href="#" class="sidebar-link active flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium">
+                <i data-lucide="folder-open" class="w-5 h-5"></i>
+                Media Library
+            </a>
+
+            <p class="mono-label px-2 mt-8 mb-2">Account</p>
+            
+            <a href="connections.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="link" class="w-5 h-5"></i>
+                Connections
+            </a>
+
+            <a href="settings.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Settings
+            </a>
+        </nav>
+
+        <!-- Sign out -->
+        <div class="p-4 border-t border-white/5">
+            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+                <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
+                Sign out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col relative z-10 overflow-hidden">
+        
+        <!-- Top Header -->
+        <header class="h-20 glass-panel border-b border-white/5 flex items-center justify-between px-6 lg:px-10 z-20 shrink-0">
+            <div class="flex items-center gap-4">
+                <button type="button" id="bridge-nav-toggle" class="md:hidden p-2 -ml-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5" aria-label="Open menu" aria-expanded="false" aria-controls="bridge-sidebar">
+                    <i data-lucide="menu" class="w-6 h-6" aria-hidden="true"></i>
+                </button>
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-400">
+                    <a href="dashboard.html" class="hover:text-white transition-colors">Dashboard</a>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    <span class="text-electric font-mono uppercase tracking-wider text-xs">Media Library</span>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-4 ml-auto">
+                <button onclick="document.getElementById('upload-zone').scrollIntoView({behavior:'smooth'})" class="gold-cta hidden sm:flex items-center gap-2 px-5 py-2 rounded-full text-sm glow-elev">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    Upload Media
+                </button>
+                <button class="p-2 rounded-full text-gray-400 hover:text-electric hover:bg-white/10 transition-colors relative">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+                <div class="h-8 w-px bg-white/10 mx-1"></div>
+                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Main Area -->
+        <main class="flex-1 overflow-y-auto p-6 lg:p-10 relative">
+            <div class="max-w-7xl mx-auto space-y-8">
+                
+                <!-- Page Header -->
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                        <p class="mono-label mb-2">Asset Vault</p>
+                        <h1 class="text-3xl font-bold text-cloud mb-1">Media Library</h1>
+                        <p class="text-gray-400">Browse generated videos, hero images, and uploaded source assets.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSelectMode()" id="select-mode-btn" class="px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-2">
+                            <i data-lucide="check-square" class="w-4 h-4"></i>
+                            Select
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Storage / Stats Strip -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="glass-card p-5 rounded-2xl">
+                        <p class="mono-label mb-2">Total Items</p>
+                        <h3 class="text-2xl font-bold text-cloud">347</h3>
+                        <p class="text-xs text-green-400 font-mono uppercase tracking-wider mt-2">+12 this week</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl">
+                        <p class="mono-label mb-2">Storage Used</p>
+                        <h3 class="text-2xl font-bold text-cloud">42.8 <span class="text-base text-gray-500 font-normal">/ 100 GB</span></h3>
+                        <div class="w-full h-1.5 bg-gray-800 rounded-full mt-3 overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-electric to-goldlight rounded-full" style="width: 43%"></div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl">
+                        <p class="mono-label mb-2">Videos</p>
+                        <h3 class="text-2xl font-bold text-cloud">218</h3>
+                        <p class="text-xs text-gray-500 font-mono mt-2">31.4 GB · MP4 / WebM</p>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl">
+                        <p class="mono-label mb-2">Images</p>
+                        <h3 class="text-2xl font-bold text-cloud">129</h3>
+                        <p class="text-xs text-gray-500 font-mono mt-2">11.4 GB · PNG / JPG</p>
+                    </div>
+                </div>
+
+                <!-- Filters / Toolbar -->
+                <div class="glass-panel rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-4 border border-white/5">
+                    <!-- Search -->
+                    <div class="relative flex-1 min-w-0">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                        <input type="text" placeholder="Search by filename, prompt, or tag..." class="bridge-input w-full rounded-xl py-2.5 pl-10 pr-4 text-sm">
+                    </div>
+
+                    <!-- Type Filter Pills -->
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="setFilter(this, 'all')" class="filter-pill active px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs font-mono uppercase tracking-wider transition-all hover:bg-white/10">All</button>
+                        <button onclick="setFilter(this, 'video')" class="filter-pill px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs font-mono uppercase tracking-wider transition-all hover:bg-white/10">Videos</button>
+                        <button onclick="setFilter(this, 'image')" class="filter-pill px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs font-mono uppercase tracking-wider transition-all hover:bg-white/10">Images</button>
+                        <button onclick="setFilter(this, 'audio')" class="filter-pill px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs font-mono uppercase tracking-wider transition-all hover:bg-white/10">Audio</button>
+                    </div>
+
+                    <!-- Sort + View -->
+                    <div class="flex items-center gap-2">
+                        <div class="relative">
+                            <select class="bridge-input rounded-xl pl-3 pr-9 py-2 text-sm appearance-none cursor-pointer">
+                                <option>Recent first</option>
+                                <option>Oldest first</option>
+                                <option>Largest size</option>
+                                <option>Most used</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
+                        </div>
+                        <div class="p-1 rounded-xl bg-black/40 border border-white/10 flex">
+                            <button onclick="setView('grid', this)" id="view-grid" class="filter-pill active px-3 py-1.5 rounded-lg text-gray-300 text-xs font-medium transition-colors">
+                                <i data-lucide="grid-3x3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="setView('list', this)" id="view-list" class="filter-pill px-3 py-1.5 rounded-lg text-gray-300 text-xs font-medium transition-colors">
+                                <i data-lucide="list" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bulk Action Bar (hidden by default, shown in select mode) -->
+                <div id="bulk-bar" class="hidden glass-panel rounded-2xl px-4 py-3 flex items-center justify-between border border-electric/30 bg-electric/5">
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="font-mono uppercase tracking-wider text-electric font-semibold" id="bulk-count">0 selected</span>
+                        <button onclick="clearSelection()" class="text-xs text-gray-400 hover:text-white transition-colors">Clear</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cloud text-xs font-semibold hover:bg-white/10 transition-colors flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+                        </button>
+                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cloud text-xs font-semibold hover:bg-white/10 transition-colors flex items-center gap-1.5">
+                            <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i> Add to Collection
+                        </button>
+                        <button class="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold hover:bg-red-500/20 transition-colors flex items-center gap-1.5">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Media Grid -->
+                <div>
+                    <p class="mono-label mb-4">Recently Generated</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" id="media-grid">
+
+                        <!-- Item 1 — Video -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-electric/20 to-goldlight/15"></div>
+                                <i data-lucide="video" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">MP4</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono">00:12</span>
+                                <!-- Hover overlay -->
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors" title="Preview">
+                                        <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center hover:bg-white/25 transition-colors" title="Download">
+                                        <i data-lucide="download" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center hover:bg-white/25 transition-colors" title="Copy URL">
+                                        <i data-lucide="link-2" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center hover:bg-red-500/20 transition-colors" title="Delete">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">cyberpunk_drone_shot_v3.mp4</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>1080×1920</span>
+                                    <span>18.2 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 26</span>
+                                    <span class="text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1"><i data-lucide="link-2" class="w-3 h-3"></i>2 posts</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 — Video -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-orange-400/15"></div>
+                                <i data-lucide="coffee" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">MP4</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono">00:08</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">morning_coffee_broll.mp4</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>1080×1920</span>
+                                    <span>12.5 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 25</span>
+                                    <span class="text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1"><i data-lucide="link-2" class="w-3 h-3"></i>1 post</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 — Hero Image -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/25 to-electric/15"></div>
+                                <i data-lucide="image" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">PNG</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-electric/80 backdrop-blur-sm text-[10px] text-obsidian font-bold uppercase tracking-wider">Hero</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">neon_city_hero_4k.png</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>2160×3840</span>
+                                    <span>8.3 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 24</span>
+                                    <span class="text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1"><i data-lucide="link-2" class="w-3 h-3"></i>5 posts</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 — Square -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-bl from-purple-500/20 to-pink-500/15"></div>
+                                <i data-lucide="sparkles" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">MP4</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono">00:15</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">ai_setup_behind_scenes.mp4</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>1080×1920</span>
+                                    <span>22.7 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 23</span>
+                                    <span class="text-[10px] text-gray-500 font-mono uppercase tracking-wider">unused</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 5 — Image -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-amber-500/20 to-yellow-400/15"></div>
+                                <i data-lucide="sun" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">JPG</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">desert_sunset_ref.jpg</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>1920×1080</span>
+                                    <span>2.1 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 22</span>
+                                    <span class="text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1"><i data-lucide="link-2" class="w-3 h-3"></i>3 posts</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 6 — Rendering (in progress) -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer relative">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-t from-electric/15 to-transparent"></div>
+                                <i data-lucide="cpu" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-electric animate-pulse"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-electric/20 backdrop-blur-sm border border-electric/40 text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1">
+                                    <i data-lucide="loader-2" class="w-2.5 h-2.5 animate-spin"></i> Rendering
+                                </span>
+                                <!-- Bottom progress bar -->
+                                <div class="absolute bottom-0 left-0 right-0 h-1 bg-black/50">
+                                    <div class="h-full bg-gradient-to-r from-electric to-goldlight" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">untitled_render_24.mp4</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>LTX-2.3</span>
+                                    <span class="text-electric">67% · ~14s</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Just now</span>
+                                    <span class="text-[10px] text-gray-500 font-mono uppercase tracking-wider">RTX 3090</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 7 — Image -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-400/15"></div>
+                                <i data-lucide="leaf" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">PNG</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-electric/80 backdrop-blur-sm text-[10px] text-obsidian font-bold uppercase tracking-wider">Hero</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">forest_wide_shot.png</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>2048×3072</span>
+                                    <span>6.7 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 20</span>
+                                    <span class="text-[10px] text-electric font-mono uppercase tracking-wider flex items-center gap-1"><i data-lucide="link-2" class="w-3 h-3"></i>1 post</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 8 — Video -->
+                        <div class="media-item glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="onItemClick(this)">
+                            <div class="relative aspect-[9/16] bg-gray-900 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-red-500/20 to-orange-400/15"></div>
+                                <i data-lucide="flame" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-white/40"></i>
+                                <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono uppercase tracking-wider">WEBM</span>
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] text-cloud font-mono">00:24</span>
+                                <div class="media-overlay absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-2">
+                                    <button class="w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center hover:bg-goldlight transition-colors"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-cloud border border-white/20 flex items-center justify-center"><i data-lucide="link-2" class="w-4 h-4"></i></button>
+                                    <button class="w-10 h-10 rounded-full bg-white/15 backdrop-blur text-red-400 border border-red-500/30 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-sm font-semibold text-cloud truncate mb-1">explosion_vfx_test.webm</h4>
+                                <div class="flex items-center justify-between text-[10px] font-mono text-gray-500">
+                                    <span>1080×1920</span>
+                                    <span>34.1 MB</span>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                    <span class="text-[10px] text-gray-500 font-mono">Apr 19</span>
+                                    <span class="text-[10px] text-gray-500 font-mono uppercase tracking-wider">unused</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Pagination / Load more -->
+                    <div class="flex items-center justify-center mt-8 gap-3">
+                        <span class="text-xs text-gray-500 font-mono uppercase tracking-wider">Showing 8 of 347</span>
+                        <button class="px-5 py-2 rounded-xl border border-white/10 bg-white/5 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-2">
+                            Load more <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Dropzone -->
+                <div id="upload-zone" class="space-y-4 pt-4">
+                    <p class="mono-label">Upload New Asset</p>
+                    <div class="upload-dropzone glass-panel rounded-2xl border-2 border-dashed border-white/15 p-10 flex flex-col items-center justify-center text-center cursor-pointer">
+                        <div class="w-16 h-16 rounded-2xl bg-electric/10 border border-electric/20 flex items-center justify-center mb-5">
+                            <i data-lucide="upload-cloud" class="w-8 h-8 text-electric"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-cloud mb-2">Drop files here or click to browse</h3>
+                        <p class="text-sm text-gray-400 mb-1 max-w-md">Upload hero images for I2V workflows, reference photos, or finished videos. We'll handle aspect-ratio detection and metadata extraction automatically.</p>
+                        <p class="font-mono text-[0.65rem] uppercase tracking-wider text-gray-500 mt-3">PNG / JPG / MP4 / WEBM &nbsp;·&nbsp; Max 500 MB / file</p>
+                        <button class="gold-cta mt-6 px-6 py-2.5 rounded-xl text-sm flex items-center gap-2">
+                            <i data-lucide="folder-open" class="w-4 h-4"></i> Browse Files
+                        </button>
+                    </div>
+                </div>
+
+                <div class="h-20"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Navigation Bar (Bottom) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full glass-panel border-t border-white/10 z-50 px-6 py-3 flex justify-between items-center pb-safe">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="calendar.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="calendar-days" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Schedule</span>
+        </a>
+        <div class="relative -top-5" onclick="window.location.href='studio.html'">
+            <button class="gold-cta w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(229,185,108,0.45)] border-4 border-[#0F0F0F]">
+                <i data-lucide="plus" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <a href="#" class="flex flex-col items-center text-electric gap-1">
+            <i data-lucide="folder-open" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Library</span>
+        </a>
+        <a href="connections.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+            <i data-lucide="link" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Connect</span>
+        </a>
+    </div>
+
+    <script src="bridge.js"></script>
+    <script>
+        lucide.createIcons();
+
+        let selectMode = false;
+
+        function setFilter(btn, type) {
+            // Toggle filter pill active state in the same group
+            const group = btn.parentElement;
+            group.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Real implementation would filter #media-grid here based on `type`.
+        }
+
+        function setView(mode, btn) {
+            const group = btn.parentElement;
+            group.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Real implementation would switch grid layout here based on `mode`.
+        }
+
+        function toggleSelectMode() {
+            selectMode = !selectMode;
+            const bulkBar = document.getElementById('bulk-bar');
+            const btn = document.getElementById('select-mode-btn');
+            if (selectMode) {
+                bulkBar.classList.remove('hidden');
+                btn.classList.add('bg-electric/10', 'border-electric/40', 'text-electric');
+                btn.classList.remove('bg-white/5', 'border-white/10', 'text-cloud');
+            } else {
+                bulkBar.classList.add('hidden');
+                btn.classList.remove('bg-electric/10', 'border-electric/40', 'text-electric');
+                btn.classList.add('bg-white/5', 'border-white/10', 'text-cloud');
+                clearSelection();
+            }
+        }
+
+        function onItemClick(item) {
+            if (!selectMode) return;
+            item.classList.toggle('selected');
+            updateBulkCount();
+        }
+
+        function updateBulkCount() {
+            const count = document.querySelectorAll('.media-item.selected').length;
+            document.getElementById('bulk-count').innerText = `${count} selected`;
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.media-item.selected').forEach(el => el.classList.remove('selected'));
+            updateBulkCount();
+        }
+    </script>
+</body>
+</html>

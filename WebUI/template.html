@@ -63,8 +63,10 @@
     <!-- Aurora Background (Bridge UI) -->
     <div class="aurora-bg"></div>
 
-    <!-- Sidebar (Desktop) -->
-    <aside class="w-64 glass-panel border-r border-white/5 hidden md:flex flex-col relative z-20">
+    <div id="bridge-nav-backdrop" class="bridge-nav-backdrop fixed inset-0 z-[60] md:hidden" aria-hidden="true"></div>
+
+    <!-- Sidebar (Desktop + mobile drawer) -->
+    <aside id="bridge-sidebar" class="w-64 glass-panel border-r border-white/5 flex flex-col fixed inset-y-0 left-0 z-[70] h-full -translate-x-full transition-transform duration-200 ease-out shadow-2xl shadow-black/50 md:static md:inset-auto md:h-auto md:translate-x-0 md:shadow-none md:z-20">
         <div class="h-20 flex items-center px-6 border-b border-white/5">
             <div class="flex items-center gap-2.5 cursor-pointer w-fit" onclick="window.location.href='index.html'">
                 <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-electric to-goldlight flex items-center justify-center p-0.5 shadow-lg shadow-electric/30">
@@ -103,29 +105,30 @@
                 Templates
             </a>
 
-            <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+            <a href="media.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
                 <i data-lucide="folder-open" class="w-5 h-5"></i>
                 Media Library
             </a>
 
             <p class="mono-label px-2 mt-8 mb-2">Account</p>
             
-            <a href="auth.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+            <a href="connections.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
                 <i data-lucide="link" class="w-5 h-5"></i>
                 Connections
             </a>
+
+            <a href="settings.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 font-medium">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Settings
+            </a>
         </nav>
 
+        <!-- Sign out -->
         <div class="p-4 border-t border-white/5">
-            <div class="p-4 rounded-2xl bg-gradient-to-br from-electric/15 to-goldlight/5 border border-electric/15 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 w-16 h-16 bg-electric/30 rounded-full blur-xl pointer-events-none"></div>
-                <h4 class="text-sm font-bold text-cloud mb-1">Local Renderer</h4>
-                <p class="text-xs text-gray-400 mb-3 font-mono">Wan 2.1 &amp; LTX-2.3 Online</p>
-                <div class="flex items-center gap-2 text-xs text-green-400 font-medium font-mono uppercase tracking-wider">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    API Connected
-                </div>
-            </div>
+            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+                <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
+                Sign out
+            </button>
         </div>
     </aside>
 
@@ -135,8 +138,8 @@
         <!-- Top Header -->
         <header class="h-20 glass-panel border-b border-white/5 flex items-center justify-between px-6 lg:px-10 z-20 shrink-0">
             <div class="flex items-center gap-4">
-                <button class="md:hidden p-2 text-gray-400 hover:text-white">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button type="button" id="bridge-nav-toggle" class="md:hidden p-2 -ml-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5" aria-label="Open menu" aria-expanded="false" aria-controls="bridge-sidebar">
+                    <i data-lucide="menu" class="w-6 h-6" aria-hidden="true"></i>
                 </button>
                 <div class="hidden sm:flex items-center gap-2 text-sm text-gray-400">
                     <a href="dashboard.html" class="hover:text-white transition-colors">Dashboard</a>
@@ -361,12 +364,13 @@
             <i data-lucide="layout-template" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Templates</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <a href="settings.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
             <i data-lucide="settings" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Settings</span>
         </a>
     </div>
 
+    <script src="bridge.js"></script>
     <script>
         lucide.createIcons();
 

@@ -190,3 +190,29 @@ html, body {
     border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(229, 185, 108, 0.35); }
+
+/* ---------------------------------------------------------------------
+   Mobile nav drawer (hamburger + slide-in sidebar)
+--------------------------------------------------------------------- */
+.bridge-nav-backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.bridge-nav-backdrop.bridge-nav-backdrop--open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+@media (min-width: 768px) {
+    .bridge-nav-backdrop { display: none !important; }
+}
+@media (max-width: 767.98px) {
+    #bridge-sidebar.bridge-nav-open {
+        transform: translateX(0) !important;
+    }
+}
