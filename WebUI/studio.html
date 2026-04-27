@@ -144,12 +144,12 @@
                 Create Post
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 Calendar
             </a>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="template.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="layout-template" class="w-5 h-5"></i>
                 Templates
             </a>
@@ -161,7 +161,7 @@
 
             <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-2">Account</p>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="auth.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="link" class="w-5 h-5"></i>
                 Connections
             </a>
@@ -669,9 +669,9 @@
 
         // Final Action
         function finishSchedule() {
-            // In a real app, this submits to the backend
-            // For the prototype, we redirect back to the dashboard
-            window.location.href = 'dashboard.html';
+            // In a real app, this submits to the backend.
+            // For the demo, route to the calendar so the freshly scheduled post is visible in context.
+            window.location.href = 'calendar.html';
         }
     </script>
 </body>

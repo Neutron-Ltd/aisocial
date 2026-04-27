@@ -198,7 +198,7 @@
                     </div>
 
                     <p class="text-center text-sm text-gray-500 mt-8">
-                        Already have an account? <a href="#" class="text-cyan-400 hover:text-cyan-300 font-medium transition-colors">Log in</a>
+                        Already have an account? <a href="#" onclick="event.preventDefault(); goToStep(1);" class="text-cyan-400 hover:text-cyan-300 font-medium transition-colors">Log in</a>
                     </p>
                 </div>
 
@@ -328,9 +328,7 @@
             // If it's the final success step, simulate redirect
             if(stepNumber === 3) {
                 setTimeout(() => {
-                    // Redirect logic would go here
-                    // window.location.href = 'dashboard.html';
-                    console.log('Redirecting to Dashboard...');
+                    window.location.href = 'dashboard.html';
                 }, 2500);
             }
         }

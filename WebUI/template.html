@@ -110,7 +110,7 @@
                 Dashboard
             </a>
             
-            <a href="create_post.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="studio.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="wand-2" class="w-5 h-5"></i>
                 Create Post
             </a>
@@ -133,7 +133,7 @@
 
             <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-2">Account</p>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="auth.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="link" class="w-5 h-5"></i>
                 Connections
             </a>
@@ -170,7 +170,7 @@
 
             <!-- Right Actions -->
             <div class="flex items-center gap-4 ml-auto">
-                <button onclick="window.location.href='create_post.html'" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
+                <button onclick="window.location.href='studio.html'" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     New Post
                 </button>
@@ -375,7 +375,7 @@
             <i data-lucide="calendar-days" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Schedule</span>
         </a>
-        <div class="relative -top-5" onclick="window.location.href='create_post.html'">
+        <div class="relative -top-5" onclick="window.location.href='studio.html'">
             <button class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] border-4 border-[#030712]">
                 <i data-lucide="plus" class="w-6 h-6"></i>
             </button>
@@ -442,13 +442,11 @@
                 btn.classList.replace('from-purple-600', 'from-green-600');
                 btn.classList.replace('to-cyan-600', 'to-emerald-500');
                 lucide.createIcons();
-                
+
+                // After the success state is visible, route back to the dashboard so the demo flow continues.
                 setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.classList.replace('from-green-600', 'from-purple-600');
-                    btn.classList.replace('to-emerald-500', 'to-cyan-600');
-                    lucide.createIcons();
-                }, 2000);
+                    window.location.href = 'dashboard.html';
+                }, 1500);
             }, 1200);
         }
     </script>

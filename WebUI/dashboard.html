@@ -113,12 +113,12 @@
                 Dashboard
             </a>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 Calendar
             </a>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="template.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="layout-template" class="w-5 h-5"></i>
                 Templates
             </a>
@@ -130,7 +130,7 @@
 
             <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-2">Account</p>
             
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
+            <a href="auth.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium">
                 <i data-lucide="link" class="w-5 h-5"></i>
                 Connections
             </a>
@@ -176,7 +176,7 @@
             <!-- Right Actions -->
             <div class="flex items-center gap-4 ml-auto">
                 <!-- Create Post Button (Primary) -->
-                <button class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
+                <button onclick="window.location.href='studio.html'" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
                     <i data-lucide="wand-2" class="w-4 h-4"></i>
                     Create Post
                 </button>
@@ -281,7 +281,7 @@
                                 <i data-lucide="clock-4" class="w-5 h-5 text-cyan-400"></i>
                                 Upcoming Queue
                             </h2>
-                            <button class="text-sm text-gray-400 hover:text-white transition-colors">View Calendar</button>
+                            <button onclick="window.location.href='calendar.html'" class="text-sm text-gray-400 hover:text-white transition-colors">View Calendar</button>
                         </div>
 
                         <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
@@ -387,7 +387,7 @@
                         </div>
                         
                         <!-- Empty state mock for bottom of list -->
-                        <button class="w-full py-4 border border-dashed border-white/20 rounded-2xl text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-2">
+                        <button onclick="window.location.href='studio.html'" class="w-full py-4 border border-dashed border-white/20 rounded-2xl text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-2">
                             <i data-lucide="plus-circle" class="w-6 h-6"></i>
                             <span class="text-sm font-medium">Schedule another post</span>
                         </button>
@@ -400,25 +400,25 @@
                         <div>
                             <h2 class="text-xl font-bold text-white mb-4">Quick Actions</h2>
                             <div class="grid grid-cols-2 gap-3">
-                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-purple-500/50">
+                                <button onclick="window.location.href='studio.html'" class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-purple-500/50">
                                     <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
                                         <i data-lucide="video" class="w-5 h-5 text-purple-400"></i>
                                     </div>
                                     <span class="text-xs font-semibold text-gray-300">New Video</span>
                                 </button>
-                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-cyan-500/50">
+                                <button onclick="window.location.href='template.html'" class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-cyan-500/50">
                                     <div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center">
                                         <i data-lucide="layout-template" class="w-5 h-5 text-cyan-400"></i>
                                     </div>
                                     <span class="text-xs font-semibold text-gray-300">Create Template</span>
                                 </button>
-                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-pink-500/50">
+                                <button onclick="window.location.href='studio.html'" class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-pink-500/50">
                                     <div class="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center">
                                         <i data-lucide="image-plus" class="w-5 h-5 text-pink-400"></i>
                                     </div>
                                     <span class="text-xs font-semibold text-gray-300">Upload Hero Image</span>
                                 </button>
-                                <button class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-blue-500/50">
+                                <button onclick="window.location.href='auth.html'" class="glass-card p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-blue-500/50">
                                     <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
                                         <i data-lucide="users" class="w-5 h-5 text-blue-400"></i>
                                     </div>
@@ -504,17 +504,17 @@
             <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Home</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <a href="calendar.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
             <i data-lucide="calendar-days" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Schedule</span>
         </a>
         <!-- Floating FAB for Mobile -->
-        <div class="relative -top-5">
+        <div class="relative -top-5" onclick="window.location.href='studio.html'">
             <button class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] border-4 border-[#030712]">
                 <i data-lucide="plus" class="w-6 h-6"></i>
             </button>
         </div>
-        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <a href="template.html" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
             <i data-lucide="layout-template" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Templates</span>
         </a>
