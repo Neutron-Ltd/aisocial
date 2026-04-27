@@ -1,0 +1,31 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.class
+
+# ComfyUI Large Data Directories
+ComfyUI/models/
+ComfyUI/output/
+ComfyUI/input/
+ComfyUI/temp/
+ComfyUI/user/
+
+# Large Model Extensions (Safety net)
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.gguf
+*.onnx
+
+# System & IDE files
+.DS_Store
+.vscode/
+.idea/
+*.log
