@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "name": "Flux.1 [dev] \u2014 High-Res Image",
+    "engine": "Flux.1 [dev]",
+    "kind": "image",
+    "image_input": "none",
+    "description": "High-quality static images for X and Instagram feed posts.",
+    "models": {
+      "checkpoints": [
+        "flux1-dev-fp8.safetensors"
+      ]
+    },
+    "sizes": {
+      "9:16": [
+        768,
+        1344
+      ],
+      "1:1": [
+        1024,
+        1024
+      ],
+      "16:9": [
+        1344,
+        768
+      ]
+    },
+    "quality": {
+      "draft": {
+        "steps": 12
+      },
+      "standard": {
+        "steps": 20
+      }
+    },
+    "defaults": {
+      "cfg": 1.0,
+      "guidance": 3.5
+    }
+  },
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "flux1-dev-fp8.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "{{prompt}}",
+        "clip": [
+          "1",
+          1
+        ]
+      }
+    },
+    "3": {
+      "class_type": "FluxGuidance",
+      "inputs": {
+        "conditioning": [
+          "2",
+          0
+        ],
+        "guidance": "{{guidance}}"
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "",
+        "clip": [
+          "1",
+          1
+        ]
+      }
+    },
+    "5": {
+      "class_type": "EmptySD3LatentImage",
+      "inputs": {
+        "width": "{{width}}",
+        "height": "{{height}}",
+        "batch_size": 1
+      }
+    },
+    "6": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "seed": "{{seed}}",
+        "steps": "{{steps}}",
+        "cfg": "{{cfg}}",
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "positive": [
+          "3",
+          0
+        ],
+        "negative": [
+          "4",
+          0
+        ],
+        "latent_image": [
+          "5",
+          0
+        ],
+        "denoise": 1.0
+      }
+    },
+    "7": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "6",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      }
+    },
+    "8": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": [
+          "7",
+          0
+        ],
+        "filename_prefix": "{{filename_prefix}}"
+      }
+    }
+  }
+}

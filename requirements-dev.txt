@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.2.0
+# Bundled ffmpeg so tests/fake_comfyui.py can return playable test videos.
+imageio-ffmpeg==0.7.0

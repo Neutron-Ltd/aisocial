@@ -6,9 +6,9 @@
     <title>NEUTX — Generation Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
-    <script src="config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -153,7 +153,7 @@
 
         <!-- Sign out -->
         <div class="p-4 border-t border-white/5">
-            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+            <button type="button" data-action="sign-out" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
                 <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
                 Sign out
             </button>
@@ -178,13 +178,9 @@
 
             <!-- Right Actions -->
             <div class="flex items-center gap-4 ml-auto">
-                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <div class="h-8 w-px bg-white/10 mx-1"></div>
-                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
-                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                <button type="button" onclick="window.location.href='settings.html'" title="Account settings" class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span data-user-name class="text-sm font-medium text-gray-300 hidden sm:block"></span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm" data-user-initial></div>
                 </button>
             </div>
         </header>
@@ -224,116 +220,90 @@
                 </div>
 
                 <div class="mt-16">
-                    <!-- ========================================== -->
-                    <!-- STEP 1: CHOOSE TEMPLATE                    -->
-                    <!-- ========================================== -->
+                    <!-- STEP 1: CHOOSE TEMPLATE -->
                     <div id="step-1" class="wizard-step active">
-                        <div class="flex justify-between items-end mb-6">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-6">
                             <div>
                                 <h2 class="text-2xl font-bold text-white">Choose your starting point</h2>
-                                <p class="text-gray-400 mt-1">Select a workflow. We hide all the complex ComfyUI nodes for you.</p>
+                                <p class="text-gray-400 mt-1">Select a template. We hide all the complex ComfyUI nodes for you.</p>
                             </div>
-                            <div class="flex gap-2">
-                                <button class="px-4 py-2 rounded-xl bg-white/5 text-white text-sm font-medium hover:bg-white/10 transition-colors border border-white/10">System Defaults</button>
-                                <button class="px-4 py-2 rounded-xl text-gray-400 text-sm font-medium hover:text-white transition-colors">My Templates</button>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Template Card 1 -->
-                            <div class="glass-panel p-6 rounded-2xl flex flex-col h-full hover:border-electric/50 transition-all group cursor-pointer" onclick="nextStep(2)">
-                                <div class="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center mb-4 border border-electric/20 group-hover:scale-110 transition-transform">
-                                    <i data-lucide="smartphone" class="w-6 h-6 text-electric"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-white mb-2">TikTok / Reels Trend</h3>
-                                <p class="text-sm text-gray-400 mb-6 flex-1">Natively generates vertical 9:16 portrait video optimized for short-form mobile viewing.</p>
-                                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-auto">
-                                    <span class="text-xs font-mono text-gray-500">Engine: LTX-2.3</span>
-                                    <button class="text-sm text-electric font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">Select <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                                </div>
-                            </div>
-
-                            <!-- Template Card 2 -->
-                            <div class="glass-panel p-6 rounded-2xl flex flex-col h-full hover:border-electric/50 transition-all group cursor-pointer" onclick="nextStep(2)">
-                                <div class="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center mb-4 border border-electric/20 group-hover:scale-110 transition-transform">
-                                    <i data-lucide="film" class="w-6 h-6 text-electric"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-white mb-2">Cinematic B-Roll</h3>
-                                <p class="text-sm text-gray-400 mb-6 flex-1">High-fidelity 16:9 generation with perfect physics and lighting. Uses Image-to-Video baseline.</p>
-                                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-auto">
-                                    <span class="text-xs font-mono text-gray-500">Engine: Wan 2.1 (14B)</span>
-                                    <button class="text-sm text-electric font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">Select <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                                </div>
-                            </div>
-
-                            <!-- Template Card 3 -->
-                            <div class="glass-panel p-6 rounded-2xl flex flex-col h-full hover:border-electric/50 transition-all group cursor-pointer" onclick="nextStep(2)">
-                                <div class="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center mb-4 border border-electric/20 group-hover:scale-110 transition-transform">
-                                    <i data-lucide="image" class="w-6 h-6 text-electric"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-white mb-2">Static Image Post</h3>
-                                <p class="text-sm text-gray-400 mb-6 flex-1">Generate stunning, high-res static images perfect for X or Instagram grid posts.</p>
-                                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-auto">
-                                    <span class="text-xs font-mono text-gray-500">Engine: Flux.1 [dev]</span>
-                                    <button class="text-sm text-electric font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">Select <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                                </div>
+                            <div class="flex gap-2" role="tablist">
+                                <button type="button" data-tab="system" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-colors border border-transparent">System Defaults</button>
+                                <button type="button" data-tab="mine" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition-colors border border-transparent">My Templates</button>
                             </div>
                         </div>
+                        <div id="comfy-warning" class="hidden mb-6 px-5 py-4 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 text-sm"></div>
+                        <div id="template-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="text-gray-500 text-sm">Loading templates...</div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-8">Already have a finished video or image? <a href="media.html" class="text-electric hover:text-goldlight">Schedule it from the Media Library</a>.</p>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- STEP 2: ADD CONTENT                        -->
-                    <!-- ========================================== -->
+                    <!-- STEP 2: ADD CONTENT -->
                     <div id="step-2" class="wizard-step">
-                        <div class="glass-panel p-8 rounded-[2rem]">
-                            <div class="flex items-center justify-between mb-8">
+                        <form id="content-form" class="glass-panel p-6 sm:p-8 rounded-[2rem]" novalidate>
+                            <div class="flex items-start justify-between gap-4 mb-8">
                                 <div>
                                     <h2 class="text-2xl font-bold text-white">What's the vision?</h2>
-                                    <p class="text-gray-400 mt-1">Provide an image or prompt. We'll handle the complex negative prompting automatically.</p>
+                                    <p class="text-gray-400 mt-1">Template: <span id="chosen-template" class="text-electric font-semibold"></span> · <span id="chosen-engine" class="font-mono text-xs"></span></p>
                                 </div>
-                                <button onclick="nextStep(1)" class="p-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors tooltip" title="Back to Templates">
+                                <button type="button" data-goto="1" class="p-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors" title="Back to Templates">
                                     <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
                                 </button>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <!-- Left: Media Upload -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Hero Image (Optional for I2V)</label>
-                                    <div class="w-full h-64 border-2 border-dashed border-gray-700 hover:border-electric rounded-2xl bg-black/30 flex flex-col items-center justify-center text-center p-6 transition-colors cursor-pointer group">
-                                        <div class="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                            <i data-lucide="upload-cloud" class="w-8 h-8 text-electric"></i>
+                                <div id="hero-section">
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Hero Image <span id="hero-required" class="text-xs font-normal text-gray-500"></span></label>
+                                    <div id="hero-drop" tabindex="0" role="button" aria-label="Upload hero image" class="w-full h-64 border-2 border-dashed border-gray-700 hover:border-electric rounded-2xl bg-black/30 flex flex-col items-center justify-center text-center p-6 transition-colors cursor-pointer group relative overflow-hidden">
+                                        <div id="hero-empty" class="flex flex-col items-center">
+                                            <div class="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                                <i data-lucide="upload-cloud" class="w-8 h-8 text-electric"></i>
+                                            </div>
+                                            <h4 class="text-white font-medium mb-1">Drag and drop your image</h4>
+                                            <p class="text-xs text-gray-500">PNG, JPG or WEBP</p>
+                                            <span class="mt-4 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold group-hover:bg-white/20 transition-colors">Browse Files</span>
                                         </div>
-                                        <h4 class="text-white font-medium mb-1">Drag and drop your image</h4>
-                                        <p class="text-xs text-gray-500">Supports JPG, PNG (Max 10MB)</p>
-                                        <button class="mt-4 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors">Browse Files</button>
+                                        <img id="hero-preview" alt="Hero image preview" class="hidden absolute inset-0 w-full h-full object-contain bg-black">
+                                        <button type="button" id="hero-remove" class="hidden absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 border border-white/20 text-xs text-white hover:bg-red-500/80">Remove</button>
                                     </div>
+                                    <input id="hero-input" type="file" accept="image/png,image/jpeg,image/webp" class="hidden">
+                                </div>
+                                <div id="no-hero-note" class="hidden rounded-2xl border border-white/10 bg-black/20 p-6 text-sm text-gray-400 flex flex-col justify-center">
+                                    <i data-lucide="type" class="w-8 h-8 text-electric mb-3"></i>
+                                    This template generates from your prompt alone — no image needed.
+                                    <p id="style-note" class="mt-4 text-xs text-gray-500"></p>
                                 </div>
 
-                                <!-- Right: Prompt & Settings -->
                                 <div class="flex flex-col">
-                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Action Prompt</label>
-                                    <textarea rows="5" placeholder="e.g. The camera slowly zooms in on the cyberpunk city, neon lights reflecting in the puddles, cinematic lighting..." class="w-full bridge-input rounded-2xl p-4 text-white placeholder-gray-600 resize-none mb-6"></textarea>
-                                    
+                                    <label for="prompt" class="block text-sm font-semibold text-gray-300 mb-2">Prompt</label>
+                                    <textarea id="prompt" rows="5" maxlength="2000" required placeholder="e.g. The camera slowly zooms in on a neon-lit city, reflections in the puddles..." class="w-full bridge-input rounded-2xl p-4 text-white placeholder-gray-600 resize-none mb-6"></textarea>
+
                                     <div class="grid grid-cols-2 gap-4 mb-auto">
                                         <div>
-                                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">Output Quality</label>
+                                            <label for="quality" class="block text-xs font-semibold text-gray-400 mb-1.5">Output Quality</label>
                                             <div class="relative">
-                                                <select class="w-full bridge-input rounded-xl p-3 text-sm text-white appearance-none cursor-pointer">
-                                                    <option>High (1080p Upscaled)</option>
-                                                    <option>Standard (720p)</option>
-                                                    <option>Draft (480p Fast)</option>
+                                                <select id="quality" class="w-full bridge-input rounded-xl p-3 text-sm text-white appearance-none cursor-pointer">
+                                                    <option value="standard">Standard</option>
+                                                    <option value="draft">Draft (faster)</option>
                                                 </select>
                                                 <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-semibold text-gray-400 mb-1.5">Motion Scale</label>
+                                            <label for="aspect" class="block text-xs font-semibold text-gray-400 mb-1.5">Aspect Ratio</label>
                                             <div class="relative">
-                                                <select class="w-full bridge-input rounded-xl p-3 text-sm text-white appearance-none cursor-pointer">
-                                                    <option>Subtle (Less movement)</option>
-                                                    <option selected>Dynamic (Standard)</option>
-                                                    <option>Aggressive (High action)</option>
+                                                <select id="aspect" class="w-full bridge-input rounded-xl p-3 text-sm text-white appearance-none cursor-pointer"></select>
+                                                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
+                                            </div>
+                                        </div>
+                                        <div id="length-field" class="col-span-2">
+                                            <label for="length" class="block text-xs font-semibold text-gray-400 mb-1.5">Clip Length</label>
+                                            <div class="relative">
+                                                <select id="length" class="w-full bridge-input rounded-xl p-3 text-sm text-white appearance-none cursor-pointer">
+                                                    <option value="short">Short (~2s)</option>
+                                                    <option value="standard" selected>Standard (~3s)</option>
+                                                    <option value="long">Long (~5s)</option>
                                                 </select>
                                                 <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
                                             </div>
@@ -341,197 +311,143 @@
                                     </div>
 
                                     <div class="mt-6 flex justify-end">
-                                        <button onclick="startGeneration()" class="gold-cta px-8 py-3.5 rounded-xl flex items-center gap-2">
+                                        <button type="submit" id="generate-btn" class="gold-cta px-8 py-3.5 rounded-xl flex items-center gap-2">
                                             <i data-lucide="cpu" class="w-5 h-5"></i>
-                                            Generate Video
+                                            <span id="generate-label">Generate</span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- STEP 3: REVIEW OUTPUT (Generation Sim)     -->
-                    <!-- ========================================== -->
+                    <!-- STEP 3: REVIEW OUTPUT -->
                     <div id="step-3" class="wizard-step">
-                        <div class="glass-panel p-8 rounded-[2rem] text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[450px]">
-                            
-                            <!-- State A: Loading / Rendering -->
-                            <div id="rendering-state" class="w-full max-w-md mx-auto flex flex-col items-center z-10 transition-opacity duration-500">
+                        <div class="glass-panel p-6 sm:p-8 rounded-[2rem] text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[450px]">
+                            <div id="rendering-state" class="w-full max-w-md mx-auto flex flex-col items-center z-10">
                                 <div class="w-20 h-20 rounded-2xl bg-gray-900 border border-electric/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(229,185,108,0.25)]">
                                     <i data-lucide="cpu" class="w-10 h-10 text-electric animate-pulse"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold text-white mb-2" id="render-title">Waking up Workstation...</h3>
-                                <p class="text-gray-400 text-sm mb-8" id="render-desc">Allocating VRAM and loading Wan 2.1 (14B) model.</p>
-                                
+                                <h3 class="text-2xl font-bold text-white mb-2" id="render-title">Queued</h3>
+                                <p class="text-gray-400 text-sm mb-8" id="render-desc"></p>
                                 <div class="w-full">
                                     <div class="flex justify-between text-xs text-gray-500 mb-2 font-mono">
-                                        <span>Progress</span>
-                                        <span id="render-percent">0%</span>
+                                        <span id="render-phase">Waiting</span>
+                                        <span id="render-elapsed">0s</span>
                                     </div>
                                     <div class="h-2 w-full bg-black/50 rounded-full overflow-hidden border border-white/5">
-                                        <div id="render-bar" class="h-full bg-gradient-to-r from-electric to-goldlight rounded-full transition-all duration-300" style="width: 0%;"></div>
+                                        <div id="render-bar" class="h-full bg-gradient-to-r from-electric to-goldlight rounded-full transition-all duration-700" style="width: 5%;"></div>
                                     </div>
-                                    <!-- Terminal mock -->
-                                    <div class="mt-6 p-3 rounded-lg bg-black/80 border border-white/5 text-left text-[10px] font-mono text-green-400/70 h-24 overflow-hidden relative">
-                                        <div id="terminal-logs" class="absolute bottom-3 flex flex-col gap-1 transition-transform">
-                                            <span>&gt; Initiating API connection to <span data-config="comfyui-host">localhost:8188</span>...</span>
-                                        </div>
+                                    <div class="mt-6 p-3 rounded-lg bg-black/80 border border-white/5 text-left text-[11px] font-mono text-green-400/80 h-28 overflow-y-auto">
+                                        <div id="terminal-logs" class="flex flex-col gap-1"></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- State B: Video Ready -->
-                            <div id="ready-state" class="w-full max-w-3xl mx-auto hidden z-10 opacity-0 transition-opacity duration-500">
-                                <div class="flex items-center justify-between mb-6 text-left">
+                            <div id="failed-state" class="hidden w-full max-w-md mx-auto z-10">
+                                <div class="w-20 h-20 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6 mx-auto">
+                                    <i data-lucide="alert-triangle" class="w-10 h-10 text-red-400"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Generation failed</h3>
+                                <p id="failed-reason" class="text-red-300 text-sm mb-8 break-words"></p>
+                                <div class="flex flex-col sm:flex-row justify-center gap-3">
+                                    <button type="button" data-goto="2" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10">Edit prompt</button>
+                                    <button type="button" id="retry-btn" class="gold-cta px-6 py-3 rounded-xl">Try again</button>
+                                </div>
+                            </div>
+
+                            <div id="ready-state" class="w-full max-w-3xl mx-auto hidden z-10">
+                                <div class="flex items-center justify-between mb-6 text-left gap-4">
                                     <div>
                                         <h3 class="text-2xl font-bold text-white">Generation Complete</h3>
-                                        <p class="text-gray-400 text-sm">Review your video before scheduling.</p>
+                                        <p class="text-gray-400 text-sm">Review the result before scheduling.</p>
                                     </div>
-                                    <div class="px-3 py-1 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-mono flex items-center gap-2">
-                                        <i data-lucide="check-circle-2" class="w-4 h-4"></i> Render Time: 42s
-                                    </div>
-                                </div>
-
-                                <!-- Mock Video Player -->
-                                <div class="w-full aspect-[9/16] max-h-[400px] md:max-h-[500px] mx-auto md:aspect-video rounded-xl bg-gray-900 border border-white/10 relative overflow-hidden group shadow-2xl mb-8 flex justify-center bg-black">
-                                    <!-- Scanning laser effect to make it look generated -->
-                                    <div class="absolute inset-0 bg-gradient-to-tr from-electric/25 to-goldlight/15 opacity-80 mix-blend-overlay"></div>
-                                    <div class="w-full max-w-[280px] h-full bg-gray-800 relative shadow-2xl overflow-hidden border-x border-white/10">
-                                        <!-- Placeholder visual -->
-                                        <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
-                                            <i data-lucide="image" class="w-16 h-16 mb-4 opacity-50"></i>
-                                            <span class="text-xs uppercase tracking-widest font-mono">Cyberpunk_City_Final.mp4</span>
-                                        </div>
-                                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 hover:scale-110 transition-transform">
-                                                <i data-lucide="play" class="w-8 h-8 text-white ml-1"></i>
-                                            </div>
-                                        </div>
+                                    <div class="px-3 py-1 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-mono flex items-center gap-2 shrink-0">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4"></i> <span id="render-time"></span>
                                     </div>
                                 </div>
-
+                                <div id="output-player" class="w-full rounded-xl border border-white/10 overflow-hidden shadow-2xl mb-4 flex justify-center bg-black"></div>
+                                <p id="output-meta" class="text-xs text-gray-500 font-mono mb-8"></p>
                                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                                    <button onclick="startGeneration()" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                                    <button type="button" id="regenerate-btn" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
                                         <i data-lucide="refresh-cw" class="w-4 h-4"></i> Regenerate
                                     </button>
-                                    <button onclick="nextStep(4)" class="gold-cta px-8 py-3 rounded-xl flex items-center justify-center gap-2">
+                                    <a id="download-btn" href="#" class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                                        <i data-lucide="download" class="w-4 h-4"></i> Download
+                                    </a>
+                                    <button type="button" data-goto="4" class="gold-cta px-8 py-3 rounded-xl flex items-center justify-center gap-2">
                                         Looks Good, Schedule <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                     </button>
                                 </div>
                             </div>
-                            
-                            <!-- Ambient Glow -->
                             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-electric/10 rounded-full blur-[100px] pointer-events-none"></div>
                         </div>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- STEP 4: SCHEDULE & FORMAT                  -->
-                    <!-- ========================================== -->
+                    <!-- STEP 4: SCHEDULE & PUBLISH -->
                     <div id="step-4" class="wizard-step">
-                        <div class="glass-panel p-8 rounded-[2rem]">
+                        <form id="schedule-form" class="glass-panel p-6 sm:p-8 rounded-[2rem]" novalidate>
                             <div class="flex items-center justify-between mb-8">
                                 <div>
-                                    <h2 class="text-2xl font-bold text-white">Schedule & Publish</h2>
-                                    <p class="text-gray-400 mt-1">Select destinations and pick a time. We'll handle the API pushing.</p>
+                                    <h2 class="text-2xl font-bold text-white">Schedule &amp; Publish</h2>
+                                    <p class="text-gray-400 mt-1">Select destinations and pick a time. Times are in <span id="tz-label" class="text-gray-300"></span>.</p>
                                 </div>
-                                <button onclick="nextStep(3)" class="p-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors tooltip" title="Back to Review">
+                                <button type="button" id="schedule-back" class="p-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors" title="Back">
                                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
                                 </button>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                <!-- Platforms -->
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-4">Select Platforms</label>
-                                    <div class="space-y-3">
-                                        <!-- TikTok -->
-                                        <div class="platform-card selected flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer transition-all" onclick="this.classList.toggle('selected')">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center border border-white/20 text-white">
-                                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                                                </div>
-                                                <div>
-                                                    <h4 class="font-bold text-white text-sm">TikTok</h4>
-                                                    <p class="text-xs text-gray-400">@neutron_ai</p>
-                                                </div>
-                                            </div>
-                                            <div class="w-6 h-6 rounded-full border-2 border-current text-electric flex items-center justify-center check-icon">
-                                                <i data-lucide="check" class="w-4 h-4 hidden"></i>
-                                            </div>
-                                        </div>
-
-                                        <!-- Instagram -->
-                                        <div class="platform-card flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer transition-all" onclick="this.classList.toggle('selected')">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white">
-                                                    <i data-lucide="instagram" class="w-5 h-5"></i>
-                                                </div>
-                                                <div>
-                                                    <h4 class="font-bold text-white text-sm">Instagram Reels</h4>
-                                                    <p class="text-xs text-gray-400">@neutron.visuals</p>
-                                                </div>
-                                            </div>
-                                            <div class="w-6 h-6 rounded-full border-2 border-gray-600 text-electric flex items-center justify-center check-icon">
-                                                <i data-lucide="check" class="w-4 h-4 hidden"></i>
-                                            </div>
-                                        </div>
-
-                                        <!-- X / Twitter -->
-                                        <div class="platform-card flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer transition-all" onclick="this.classList.toggle('selected')">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center border border-white/20 text-white">
-                                                    <i data-lucide="twitter" class="w-4 h-4"></i>
-                                                </div>
-                                                <div>
-                                                    <h4 class="font-bold text-white text-sm">X (Twitter)</h4>
-                                                    <p class="text-xs text-gray-400">@neutron_dev</p>
-                                                </div>
-                                            </div>
-                                            <div class="w-6 h-6 rounded-full border-2 border-gray-600 text-electric flex items-center justify-center check-icon">
-                                                <i data-lucide="check" class="w-4 h-4 hidden"></i>
-                                            </div>
-                                        </div>
+                                    <div class="flex gap-4 items-center mb-6">
+                                        <div id="schedule-thumb" class="w-20 h-20 rounded-xl overflow-hidden border border-white/10 shrink-0"></div>
+                                        <p id="schedule-media-name" class="text-sm text-gray-400 truncate"></p>
                                     </div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-4">Select Platforms</label>
+                                    <div id="platform-list" class="space-y-3"></div>
                                 </div>
 
-                                <!-- Post Details & Date -->
                                 <div class="flex flex-col">
+                                    <div id="title-field" class="mb-4 hidden">
+                                        <label for="post-title" class="block text-sm font-semibold text-gray-300 mb-2">Video Title <span class="text-xs font-normal text-gray-500">(YouTube)</span></label>
+                                        <input id="post-title" type="text" maxlength="100" class="w-full bridge-input rounded-xl p-3 text-sm text-white">
+                                    </div>
                                     <div class="mb-6">
-                                        <label class="block text-sm font-semibold text-gray-300 mb-2">Caption</label>
-                                        <textarea rows="3" placeholder="Write your social media caption here... #AI #Cyberpunk" class="w-full bridge-input rounded-2xl p-4 text-sm text-white placeholder-gray-600 resize-none"></textarea>
+                                        <label for="caption" class="block text-sm font-semibold text-gray-300 mb-2">Caption</label>
+                                        <textarea id="caption" rows="4" maxlength="5000" placeholder="Write your social media caption here..." class="w-full bridge-input rounded-2xl p-4 text-sm text-white placeholder-gray-600 resize-none"></textarea>
+                                        <p id="caption-count" class="text-xs text-gray-500 mt-1 text-right"></p>
                                     </div>
 
                                     <div class="grid grid-cols-2 gap-4 mb-auto">
                                         <div>
-                                            <label class="block text-sm font-semibold text-gray-300 mb-2">Publish Date</label>
+                                            <label for="publish-date" class="block text-sm font-semibold text-gray-300 mb-2">Publish Date</label>
                                             <div class="relative">
                                                 <i data-lucide="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
-                                                <input type="date" class="w-full bridge-input rounded-xl py-3 pl-10 pr-4 text-sm text-white appearance-none cursor-pointer" style="color-scheme: dark;">
+                                                <input id="publish-date" type="date" class="w-full bridge-input rounded-xl py-3 pl-10 pr-4 text-sm text-white appearance-none cursor-pointer" style="color-scheme: dark;">
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-semibold text-gray-300 mb-2">Time</label>
+                                            <label for="publish-time" class="block text-sm font-semibold text-gray-300 mb-2">Time</label>
                                             <div class="relative">
                                                 <i data-lucide="clock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
-                                                <input type="time" class="w-full bridge-input rounded-xl py-3 pl-10 pr-4 text-sm text-white appearance-none cursor-pointer" style="color-scheme: dark;">
+                                                <input id="publish-time" type="time" class="w-full bridge-input rounded-xl py-3 pl-10 pr-4 text-sm text-white appearance-none cursor-pointer" style="color-scheme: dark;">
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="mt-8">
-                                        <button onclick="finishSchedule()" class="gold-cta w-full py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        <button type="button" id="publish-now" class="px-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                                            <i data-lucide="zap" class="w-4 h-4"></i> Publish now
+                                        </button>
+                                        <button type="submit" id="schedule-btn" class="gold-cta sm:col-span-2 py-4 rounded-xl text-lg flex items-center justify-center gap-2">
                                             <i data-lucide="send" class="w-5 h-5"></i>
                                             Schedule to Queue
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-
                 </div>
                 <div class="h-20"></div>
             </div>
@@ -542,120 +458,17 @@
         /* Logic for platform selection checkmarks */
         .platform-card.selected .check-icon {
             border-color: currentColor;
-            background: rgba(168, 85, 247, 0.2);
+            background: rgba(229, 185, 108, 0.2);
         }
-        .platform-card.selected .check-icon i { display: block; }
+        .platform-card.disabled { opacity: .45; cursor: not-allowed; }
+        .tab-btn.active { background: rgba(255,255,255,.05); color: #fff; border-color: rgba(255,255,255,.1); }
+        .tab-btn:not(.active) { color: #9CA3AF; }
+        .platform-card.selected .check-icon > * { display: block; }
     </style>
 
+    <script src="app.js"></script>
+
     <script src="bridge.js"></script>
-    <script>
-        lucide.createIcons();
-
-        // Wizard Navigation Logic
-        function nextStep(stepNumber) {
-            // Hide all steps
-            document.querySelectorAll('.wizard-step').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Show target step
-            document.getElementById(`step-${stepNumber}`).classList.add('active');
-
-            // Update Progress Bar Line
-            const progressPercentages = {1: '0%', 2: '33%', 3: '66%', 4: '100%'};
-            document.getElementById('progress-line').style.width = progressPercentages[stepNumber];
-
-            // Update Indicators (Circles)
-            for(let i=1; i<=4; i++) {
-                const ind = document.getElementById(`ind-${i}`).firstElementChild;
-                const text = document.getElementById(`ind-${i}`).lastElementChild;
-                
-                if(i < stepNumber) {
-                    // Completed step
-                    ind.className = "w-10 h-10 rounded-full bg-goldlight text-obsidian flex items-center justify-center font-bold border-4 border-[#0F0F0F] transition-all";
-                    ind.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
-                    text.className = "text-xs font-semibold text-goldlight font-mono uppercase tracking-wider absolute -bottom-6 whitespace-nowrap";
-                } else if(i === stepNumber) {
-                    // Active step
-                    ind.className = "w-10 h-10 rounded-full bg-electric text-obsidian flex items-center justify-center font-bold border-4 border-[#0F0F0F] shadow-[0_0_15px_rgba(229,185,108,0.5)] transition-all";
-                    ind.innerHTML = i;
-                    text.className = "text-xs font-semibold text-electric font-mono uppercase tracking-wider absolute -bottom-6 whitespace-nowrap";
-                } else {
-                    // Future step
-                    ind.className = "w-10 h-10 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center font-bold border-4 border-[#0F0F0F] transition-all";
-                    ind.innerHTML = i;
-                    text.className = "text-xs font-medium text-gray-500 font-mono uppercase tracking-wider absolute -bottom-6 whitespace-nowrap";
-                }
-            }
-            lucide.createIcons();
-        }
-
-        // Mock Generation Sequence (Transitions Step 2 -> Step 3 -> Shows Video)
-        function startGeneration() {
-            nextStep(3); // Go to step 3 layout
-            
-            const renderState = document.getElementById('rendering-state');
-            const readyState = document.getElementById('ready-state');
-            const bar = document.getElementById('render-bar');
-            const pct = document.getElementById('render-percent');
-            const title = document.getElementById('render-title');
-            const desc = document.getElementById('render-desc');
-            const logs = document.getElementById('terminal-logs');
-
-            // Reset States
-            renderState.style.display = 'flex';
-            setTimeout(() => renderState.classList.remove('opacity-0'), 50);
-            readyState.classList.add('hidden', 'opacity-0');
-            bar.style.width = '0%';
-            pct.innerText = '0%';
-            const initLine = document.createElement('span');
-            initLine.textContent = '> Initiating API connection to ' + window.NEUTX.comfyuiHost() + '...';
-            logs.replaceChildren(initLine);
-
-            // Sequence Timing
-            setTimeout(() => {
-                title.innerText = "Rendering on RTX 3090...";
-                desc.innerText = "Generating 48 frames via LTX-2.3 Model";
-                bar.style.width = '45%';
-                pct.innerText = '45%';
-                logs.innerHTML += '<br><span class="text-white">> Loading wan2.1_i2v_480p_14B_fp8.safetensors [OK]</span>';
-                logs.innerHTML += '<br><span>> Sampling steps: 12/30...</span>';
-            }, 1500);
-
-            setTimeout(() => {
-                title.innerText = "Upscaling & Finalizing...";
-                desc.innerText = "Applying VAE decode and saving to .mp4";
-                bar.style.width = '85%';
-                pct.innerText = '85%';
-                logs.innerHTML += '<br><span>> Sampling steps: 30/30 [Done]</span>';
-                logs.innerHTML += '<br><span class="text-electric">> VAE Decode executing...</span>';
-                logs.style.transform = "translateY(-20px)";
-            }, 3500);
-
-            setTimeout(() => {
-                bar.style.width = '100%';
-                pct.innerText = '100%';
-                logs.innerHTML += '<br><span class="text-goldlight">> Video saved. Generation complete in 4.2s.</span>';
-                logs.style.transform = "translateY(-40px)";
-            }, 4500);
-
-            // Switch to Ready State
-            setTimeout(() => {
-                renderState.classList.add('opacity-0');
-                setTimeout(() => {
-                    renderState.style.display = 'none';
-                    readyState.classList.remove('hidden');
-                    setTimeout(() => readyState.classList.remove('opacity-0'), 50);
-                }, 500);
-            }, 5500);
-        }
-
-        // Final Action
-        function finishSchedule() {
-            // In a real app, this submits to the backend.
-            // For the demo, route to the calendar so the freshly scheduled post is visible in context.
-            window.location.href = 'calendar.html';
-        }
-    </script>
+    <script src="studio.js"></script>
 </body>
 </html>

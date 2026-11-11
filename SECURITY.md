@@ -17,10 +17,11 @@ the issue before disclosing it publicly.
 
 ## Scope
 
-This repository contains a static UI prototype and a small local preview
-server (`scripts/serve.py`). The preview server is intended for local
-development only and binds to `127.0.0.1` by default; do not expose it to
-the internet.
+In scope: the NEUTX server (`neutx/`), the web UI (`WebUI/`) and the bundled
+workflows. Areas of particular interest are authentication and sessions,
+OAuth handling, token storage, file uploads and access to media, and
+anything that lets one user read or change another user's data.
 
 ComfyUI is a separate upstream project and is not part of this repository.
-Report ComfyUI issues to that project.
+Report ComfyUI issues to that project. ComfyUI has no authentication of its
+own; do not expose it to the internet.

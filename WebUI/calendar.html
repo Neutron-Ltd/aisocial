@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -66,6 +67,9 @@
             opacity: 0.5;
             transform: scale(0.95);
         }
+        .view-btn.active { background: rgba(229,185,108,.15); color: #E5B96C; border: 1px solid rgba(229,185,108,.2); }
+        .view-btn:not(.active) { color: #9CA3AF; }
+        #post-dialog[open] { display: block; }
     </style>
 </head>
 <body class="antialiased selection:bg-electric/40 selection:text-cloud h-screen flex">
@@ -135,7 +139,7 @@
 
         <!-- Sign out -->
         <div class="p-4 border-t border-white/5">
-            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+            <button type="button" data-action="sign-out" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
                 <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
                 Sign out
             </button>
@@ -164,13 +168,9 @@
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     New Post
                 </button>
-                <button class="p-2 rounded-full text-gray-400 hover:text-electric hover:bg-white/10 transition-colors relative">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <div class="h-8 w-px bg-white/10 mx-1"></div>
-                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
-                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                <button type="button" onclick="window.location.href='settings.html'" title="Account settings" class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span data-user-name class="text-sm font-medium text-gray-300 hidden sm:block"></span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm" data-user-initial></div>
                 </button>
             </div>
         </header>
@@ -182,195 +182,88 @@
                 <!-- Calendar Controls Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 shrink-0">
                     <div class="flex items-center gap-4">
-                        <h1 class="text-2xl sm:text-3xl font-bold text-white">April 2026</h1>
+                        <h1 id="cal-title" class="text-2xl sm:text-3xl font-bold text-white min-w-[10ch]"></h1>
                         <div class="flex gap-1">
-                            <button class="p-1.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                            <button type="button" id="cal-prev" aria-label="Previous" class="p-1.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
                                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
                             </button>
-                            <button class="p-1.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                            <button type="button" id="cal-next" aria-label="Next" class="p-1.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
                                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </button>
                         </div>
-                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-medium text-white hover:bg-white/10 transition-colors">
+                        <button type="button" id="cal-today" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-medium text-white hover:bg-white/10 transition-colors">
                             Today
                         </button>
                     </div>
 
-                    <!-- View Toggles & Filters -->
                     <div class="flex items-center gap-3">
                         <div class="p-1 rounded-xl bg-black/50 border border-white/10 flex">
-                            <button class="px-4 py-1.5 rounded-lg bg-electric/15 text-electric text-sm font-medium shadow-sm border border-electric/20">Month</button>
-                            <button class="px-4 py-1.5 rounded-lg text-gray-400 hover:text-electric text-sm font-medium transition-colors">Week</button>
+                            <button type="button" data-view="month" class="view-btn px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Month</button>
+                            <button type="button" data-view="week" class="view-btn px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Week</button>
                         </div>
-                        <button class="p-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-colors tooltip flex items-center gap-2" title="Filter Platforms">
-                            <i data-lucide="filter" class="w-4 h-4"></i>
-                            <span class="text-sm font-medium hidden sm:block">Filter</span>
-                        </button>
+                        <div class="relative">
+                            <i data-lucide="filter" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
+                            <select id="cal-filter" aria-label="Filter by platform" class="bridge-input rounded-xl py-2 pl-9 pr-3 text-sm appearance-none cursor-pointer">
+                                <option value="">All platforms</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="x">X</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+
+                <div id="attention" class="hidden mb-6 shrink-0"></div>
 
                 <!-- Calendar Grid Container -->
                 <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden flex-1 flex flex-col min-h-[600px]">
-                    
-                    <!-- Days of Week Header -->
-                    <div class="grid grid-cols-7 border-b border-white/10 bg-black/40 shrink-0">
-                        <div class="py-3 text-center mono-label">Sun</div>
-                        <div class="py-3 text-center mono-label">Mon</div>
-                        <div class="py-3 text-center mono-label">Tue</div>
-                        <div class="py-3 text-center mono-label">Wed</div>
-                        <div class="py-3 text-center mono-label">Thu</div>
-                        <div class="py-3 text-center mono-label">Fri</div>
-                        <div class="py-3 text-center mono-label">Sat</div>
-                    </div>
-
-                    <!-- Scrollable Grid Body -->
+                    <div class="grid grid-cols-7 border-b border-white/10 bg-black/40 shrink-0" id="cal-weekdays"></div>
                     <div class="flex-1 overflow-y-auto">
-                        <!-- 5 Rows for the month -->
-                        <div class="grid grid-cols-7 grid-rows-5 h-full min-h-[700px] border-l border-t border-white/5" id="calendar-grid">
-                            
-                            <!-- JS Will inject cells here, but we hardcode a few for the prototype demo -->
-                            
-                            <!-- Row 1 (starts with March filler) -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-black/20 text-gray-600">
-                                <div class="text-sm font-medium mb-1">29</div>
-                                <div class="posts-container min-h-[40px] space-y-1.5"></div>
-                            </div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-black/20 text-gray-600">
-                                <div class="text-sm font-medium mb-1">30</div>
-                                <div class="posts-container min-h-[40px] space-y-1.5"></div>
-                            </div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-black/20 text-gray-600">
-                                <div class="text-sm font-medium mb-1">31</div>
-                                <div class="posts-container min-h-[40px] space-y-1.5"></div>
-                            </div>
-                            <!-- April 1st -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="flex justify-between items-start mb-1">
-                                    <div class="text-sm font-medium text-gray-300">1</div>
-                                    <button class="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-white transition-opacity"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
-                                </div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div>
-                            </div>
-                            <!-- April 2nd -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="flex justify-between items-start mb-1">
-                                    <div class="text-sm font-medium text-gray-300">2</div>
-                                </div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div>
-                            </div>
-                            <!-- April 3rd -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="flex justify-between items-start mb-1">
-                                    <div class="text-sm font-medium text-gray-300">3</div>
-                                </div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div>
-                            </div>
-                            <!-- April 4th -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="flex justify-between items-start mb-1">
-                                    <div class="text-sm font-medium text-gray-300">4</div>
-                                </div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div>
-                            </div>
-
-                            <!-- Row 2 -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">5</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">6</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">7</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="text-sm font-medium text-gray-300 mb-1">8</div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6">
-                                    <!-- Draggable Post (X/Twitter) -->
-                                    <div class="draggable-post p-1.5 rounded bg-gray-900 border border-white/10 border-l-2 border-l-electric hover:border-electric/50 text-xs shadow-md" id="post-1" draggable="true">
-                                        <div class="flex items-center gap-1.5 mb-1 text-gray-400">
-                                            <i data-lucide="twitter" class="w-3 h-3 text-blue-400"></i>
-                                            <span class="font-mono text-[9px] uppercase tracking-wider">10:00 AM</span>
-                                        </div>
-                                        <div class="font-medium text-white truncate w-full">Tech Setup Reveal</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">9</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">10</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">11</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-
-                            <!-- Row 3 -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">12</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">13</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            
-                            <!-- Today (April 14th) -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-electric/5 group relative">
-                                <div class="absolute inset-0 border-2 border-electric/50 rounded-lg pointer-events-none z-0 m-0.5"></div>
-                                <div class="flex justify-between items-start mb-1 relative z-10">
-                                    <div class="w-6 h-6 rounded-full bg-electric text-obsidian flex items-center justify-center text-xs font-bold shadow-lg shadow-electric/40">14</div>
-                                </div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6 relative z-10">
-                                    <!-- Draggable Post (TikTok) -->
-                                    <div class="draggable-post p-1.5 rounded bg-gray-900 border border-white/10 border-l-2 border-l-pink-500 hover:border-white/30 text-xs shadow-md" id="post-2" draggable="true">
-                                        <div class="flex items-center gap-1.5 mb-1 text-gray-400">
-                                            <svg class="w-3 h-3 fill-current text-white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                                            <span class="font-mono text-[9px] uppercase tracking-wider text-pink-400 font-bold">1:00 PM</span>
-                                        </div>
-                                        <div class="font-medium text-white truncate w-full">Cyberpunk Drone Shot</div>
-                                    </div>
-                                    
-                                    <!-- Draggable Post (Instagram) -->
-                                    <div class="draggable-post p-1.5 rounded bg-gray-900 border border-white/10 border-l-2 border-l-electric hover:border-electric/50 text-xs shadow-md" id="post-3" draggable="true">
-                                        <div class="flex items-center gap-1.5 mb-1 text-gray-400">
-                                            <i data-lucide="instagram" class="w-3 h-3 text-pink-500"></i>
-                                            <span class="font-mono text-[9px] uppercase tracking-wider">3:30 PM</span>
-                                        </div>
-                                        <div class="font-medium text-white truncate w-full">Behind the Scenes: AI</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">15</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">16</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">17</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">18</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-
-                            <!-- Row 4 -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">19</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">20</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">21</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group">
-                                <div class="text-sm font-medium text-gray-300 mb-1">22</div>
-                                <div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6">
-                                    <!-- Draggable Post (Instagram) -->
-                                    <div class="draggable-post p-1.5 rounded bg-gray-900 border border-white/10 border-l-2 border-l-electric hover:border-electric/50 text-xs shadow-md" id="post-4" draggable="true">
-                                        <div class="flex items-center gap-1.5 mb-1 text-gray-400">
-                                            <i data-lucide="instagram" class="w-3 h-3 text-pink-500"></i>
-                                            <span class="font-mono text-[9px] uppercase tracking-wider">9:00 AM</span>
-                                        </div>
-                                        <div class="font-medium text-white truncate w-full">Morning Coffee B-Roll</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">23</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">24</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">25</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-
-                            <!-- Row 5 -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">26</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">27</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">28</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">29</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 hover:bg-white/5 transition-colors group"><div class="text-sm font-medium text-gray-300 mb-1">30</div><div class="posts-container min-h-[40px] space-y-1.5 h-full pb-6"></div></div>
-                            <!-- May filler -->
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-black/20 text-gray-600"><div class="text-sm font-medium mb-1">1</div><div class="posts-container min-h-[40px] space-y-1.5"></div></div>
-                            <div class="day-cell p-2 border-r border-b border-white/5 bg-black/20 text-gray-600"><div class="text-sm font-medium mb-1">2</div><div class="posts-container min-h-[40px] space-y-1.5"></div></div>
-
-                        </div>
+                        <div class="grid grid-cols-7 h-full border-l border-t border-white/5" id="calendar-grid"></div>
                     </div>
                 </div>
 
-                <!-- Footer Hint -->
                 <div class="mt-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
                     <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
-                    Tip: Drag and drop scheduled posts to reschedule them to a different day.
+                    Click a post to edit it. Drag scheduled posts to another day to reschedule them. Times are in <span id="tz-label"></span>.
                 </div>
             </div>
+
+            <!-- Post detail dialog -->
+            <dialog id="post-dialog" class="bg-transparent p-0 m-auto w-full max-w-2xl backdrop:bg-black/70">
+                <form id="post-form" method="dialog" class="glass-panel rounded-2xl border border-white/10 p-6 text-cloud max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-start justify-between gap-4 mb-5">
+                        <div>
+                            <h2 class="text-xl font-bold text-white" id="pd-title">Post</h2>
+                            <div id="pd-status" class="mt-1"></div>
+                        </div>
+                        <button type="button" data-close class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5" aria-label="Close"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-5">
+                        <div id="pd-media" class="rounded-xl overflow-hidden border border-white/10 bg-black aspect-[9/16] sm:aspect-auto sm:h-64"></div>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="pd-caption" class="block text-xs font-semibold text-gray-400 mb-1.5">Caption</label>
+                                <textarea id="pd-caption" rows="4" maxlength="5000" class="w-full bridge-input rounded-xl p-3 text-sm resize-none"></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="pd-date" class="block text-xs font-semibold text-gray-400 mb-1.5">Date</label>
+                                    <input id="pd-date" type="date" class="w-full bridge-input rounded-xl p-2.5 text-sm" style="color-scheme: dark;">
+                                </div>
+                                <div>
+                                    <label for="pd-time" class="block text-xs font-semibold text-gray-400 mb-1.5">Time</label>
+                                    <input id="pd-time" type="time" class="w-full bridge-input rounded-xl p-2.5 text-sm" style="color-scheme: dark;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="mono-label mt-6 mb-3">Destinations</h3>
+                    <div id="pd-targets" class="space-y-2"></div>
+                    <div class="mt-6 flex flex-wrap justify-end gap-3" id="pd-actions"></div>
+                </form>
+            </dialog>
         </main>
     </div>
 
@@ -400,62 +293,9 @@
         </a>
     </div>
 
+    <script src="app.js"></script>
+
     <script src="bridge.js"></script>
-    <script>
-        // Initialize Icons
-        lucide.createIcons();
-
-        // Drag and Drop Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const draggables = document.querySelectorAll('.draggable-post');
-            const dropZones = document.querySelectorAll('.day-cell');
-
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', e.target.id);
-                    // Slight delay to allow the drag image to capture the full opacity element
-                    setTimeout(() => {
-                        e.target.classList.add('dragging');
-                    }, 0);
-                });
-
-                draggable.addEventListener('dragend', (e) => {
-                    e.target.classList.remove('dragging');
-                    // Remove highlight from all zones just in case
-                    dropZones.forEach(zone => zone.classList.remove('drag-over'));
-                });
-            });
-
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', (e) => {
-                    e.preventDefault(); // Necessary to allow dropping
-                    zone.classList.add('drag-over');
-                });
-
-                zone.addEventListener('dragleave', (e) => {
-                    zone.classList.remove('drag-over');
-                });
-
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    zone.classList.remove('drag-over');
-                    
-                    const id = e.dataTransfer.getData('text/plain');
-                    const draggableElement = document.getElementById(id);
-                    
-                    if(draggableElement) {
-                        // Find the posts container within the dropped day cell
-                        const container = zone.querySelector('.posts-container');
-                        if (container) {
-                            container.appendChild(draggableElement);
-                            
-                            // In a real app, you would fire an API call here to update the database
-                            console.log(`Post ${id} rescheduled to new date.`);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="calendar.js"></script>
 </body>
 </html>

@@ -1,6 +1,10 @@
-# The WebUI prototype and scripts/serve.py use only the Python standard
-# library (Python 3.8+). There are no third-party Python dependencies.
-#
-# ComfyUI is optional and not part of this repository. After running
-# scripts/setup_comfyui.sh, install its dependencies separately:
-#   pip install -r ComfyUI/requirements.txt
+# NEUTX server (Python 3.10+). Install with:  pip install -r requirements.txt
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+python-multipart==0.0.32
+cryptography==48.0.1
+pillow==13.0.0
+
+# ComfyUI is not part of this repository and has its own requirements:
+#   scripts/setup_comfyui.sh && pip install -r ComfyUI/requirements.txt

@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "name": "Wan 2.1 \u2014 Text to Video (1.3B)",
+    "engine": "Wan 2.1 (1.3B)",
+    "kind": "video",
+    "image_input": "none",
+    "description": "Short 480p clips from a text prompt. Fits on ~8 GB of VRAM.",
+    "models": {
+      "text_encoders": [
+        "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+      ],
+      "vae": [
+        "wan_2.1_vae.safetensors"
+      ],
+      "diffusion_models": [
+        "wan2.1_t2v_1.3B_fp16.safetensors"
+      ]
+    },
+    "sizes": {
+      "9:16": [
+        480,
+        832
+      ],
+      "1:1": [
+        624,
+        624
+      ],
+      "16:9": [
+        832,
+        480
+      ]
+    },
+    "quality": {
+      "draft": {
+        "steps": 15
+      },
+      "standard": {
+        "steps": 30
+      }
+    },
+    "lengths": {
+      "short": 33,
+      "standard": 49,
+      "long": 81
+    },
+    "defaults": {
+      "cfg": 6.0,
+      "fps": 16
+    }
+  },
+  "prompt": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "wan2.1_t2v_1.3B_fp16.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "ModelSamplingSD3",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "shift": 8.0
+      }
+    },
+    "3": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "type": "wan",
+        "device": "default"
+      }
+    },
+    "4": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "wan_2.1_vae.safetensors"
+      }
+    },
+    "5": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "{{prompt}}",
+        "clip": [
+          "3",
+          0
+        ]
+      }
+    },
+    "6": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "{{negative_prompt}}",
+        "clip": [
+          "3",
+          0
+        ]
+      }
+    },
+    "7": {
+      "class_type": "EmptyHunyuanLatentVideo",
+      "inputs": {
+        "width": "{{width}}",
+        "height": "{{height}}",
+        "length": "{{length}}",
+        "batch_size": 1
+      }
+    },
+    "8": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": [
+          "2",
+          0
+        ],
+        "seed": "{{seed}}",
+        "steps": "{{steps}}",
+        "cfg": "{{cfg}}",
+        "sampler_name": "uni_pc",
+        "scheduler": "simple",
+        "positive": [
+          "5",
+          0
+        ],
+        "negative": [
+          "6",
+          0
+        ],
+        "latent_image": [
+          "7",
+          0
+        ],
+        "denoise": 1.0
+      }
+    },
+    "20": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "8",
+          0
+        ],
+        "vae": [
+          "4",
+          0
+        ]
+      }
+    },
+    "21": {
+      "class_type": "CreateVideo",
+      "inputs": {
+        "images": [
+          "20",
+          0
+        ],
+        "fps": "{{fps}}"
+      }
+    },
+    "22": {
+      "class_type": "SaveVideo",
+      "inputs": {
+        "video": [
+          "21",
+          0
+        ],
+        "filename_prefix": "{{filename_prefix}}",
+        "format": "mp4",
+        "codec": "h264"
+      }
+    }
+  }
+}

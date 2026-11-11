@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -79,7 +80,7 @@
         }
     </style>
 </head>
-<body class="antialiased selection:bg-electric/40 selection:text-cloud flex items-center justify-center p-4 sm:p-8 relative">
+<body data-public="true" class="antialiased selection:bg-electric/40 selection:text-cloud flex items-center justify-center p-4 sm:p-8 relative">
 
     <!-- Aurora Background (Bridge UI) -->
     <div class="aurora-bg"></div>
@@ -138,129 +139,65 @@
                 <!-- STEP 1: Authentication (Sign Up / Log In) -->
                 <div id="step-1" class="step active flex flex-col h-full justify-center">
                     <div class="mb-8">
-                        <h2 class="text-3xl font-bold mb-2">Create an account</h2>
-                        <p class="text-gray-400">Start automating your social media with AI.</p>
+                        <h2 id="auth-title" class="text-3xl font-bold mb-2">Create an account</h2>
+                        <p id="auth-subtitle" class="text-gray-400">Start automating your social media with AI.</p>
                     </div>
 
-                    <div class="space-y-4">
-                        <!-- Custom Email/Password Form -->
+                    <form id="auth-form" class="space-y-4" novalidate>
+                        <div id="auth-error" role="alert" class="hidden px-4 py-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 text-sm"></div>
+                        <div id="name-field">
+                            <label for="auth-name" class="block text-sm font-medium text-gray-400 mb-1.5 ml-1">Your Name</label>
+                            <div class="relative">
+                                <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                                <input id="auth-name" type="text" autocomplete="name" maxlength="80" placeholder="Ada Lovelace" class="bridge-input w-full py-3.5 pl-12 pr-4 rounded-xl">
+                            </div>
+                        </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1.5 ml-1">Email Address</label>
+                            <label for="auth-email" class="block text-sm font-medium text-gray-400 mb-1.5 ml-1">Email Address</label>
                             <div class="relative">
                                 <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
-                                <input type="email" placeholder="you@example.com" class="bridge-input w-full py-3.5 pl-12 pr-4 rounded-xl">
+                                <input id="auth-email" type="email" required autocomplete="email" placeholder="you@example.com" class="bridge-input w-full py-3.5 pl-12 pr-4 rounded-xl">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1.5 ml-1">Password</label>
+                            <label for="auth-password" class="block text-sm font-medium text-gray-400 mb-1.5 ml-1">Password</label>
                             <div class="relative">
                                 <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
-                                <input type="password" placeholder="••••••••" class="bridge-input w-full py-3.5 pl-12 pr-4 rounded-xl">
+                                <input id="auth-password" type="password" required minlength="10" autocomplete="new-password" placeholder="At least 10 characters" class="bridge-input w-full py-3.5 pl-12 pr-4 rounded-xl">
                             </div>
                         </div>
 
-                        <button onclick="goToStep(2)" class="gold-cta w-full py-3.5 rounded-xl mt-2 flex justify-center items-center gap-2">
-                            Create Account
+                        <button id="auth-submit" type="submit" class="gold-cta w-full py-3.5 rounded-xl mt-2 flex justify-center items-center gap-2">
+                            <span id="auth-submit-label">Create Account</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
-                    </div>
-
-                    <div class="mt-8 flex items-center justify-center space-x-4">
-                        <div class="h-px bg-white/10 flex-1"></div>
-                        <span class="mono-label">Or continue with</span>
-                        <div class="h-px bg-white/10 flex-1"></div>
-                    </div>
-
-                    <div class="mt-6 grid grid-cols-2 gap-4">
-                        <button class="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                            <span class="text-sm font-medium">Google</span>
-                        </button>
-                        <button class="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
-                            <i data-lucide="github" class="w-5 h-5 text-white"></i>
-                            <span class="text-sm font-medium">GitHub</span>
-                        </button>
-                    </div>
+                    </form>
 
                     <p class="text-center text-sm text-gray-500 mt-8">
-                        Already have an account? <a href="dashboard.html" class="text-electric hover:text-goldlight font-medium transition-colors">Log in</a>
+                        <span id="auth-switch-text">Already have an account?</span>
+                        <a href="#" id="auth-switch" class="text-electric hover:text-goldlight font-medium transition-colors">Log in</a>
                     </p>
                 </div>
 
                 <!-- STEP 2: Onboarding (Connect Accounts) -->
                 <div id="step-2" class="step flex flex-col h-full justify-center">
-                    
-                    <button onclick="goToStep(1)" class="absolute -top-4 -left-2 p-2 text-gray-500 hover:text-white transition-colors flex items-center gap-1 text-sm">
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
-                    </button>
-
                     <div class="mb-8 mt-4">
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-electric/30 bg-electric/10 text-electric font-mono text-xs font-semibold uppercase tracking-wider mb-4">
                             Step 2 of 2
                         </div>
                         <h2 class="text-3xl font-bold mb-2">Connect Your Channels</h2>
-                        <p class="text-gray-400 text-sm">Allow NEUTX to automatically format and schedule your generated videos to these platforms.</p>
+                        <p class="text-gray-400 text-sm">Authorize NEUTX to publish your generated videos and images. You can do this later from Connections.</p>
                     </div>
 
-                    <!-- Connection Cards -->
-                    <div class="space-y-3">
-                        
-                        <!-- TikTok -->
-                        <div class="group flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center border border-white/20 text-white group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-white">TikTok</h4>
-                                    <p class="text-xs text-gray-400">Required for 9:16 Auto-Format</p>
-                                </div>
-                            </div>
-                            <button id="btn-tiktok" onclick="connectAccount('tiktok')" class="px-4 py-1.5 rounded-full bg-electric text-obsidian text-sm font-bold hover:bg-goldlight transition-colors">
-                                Connect
-                            </button>
-                        </div>
-
-                        <!-- Instagram -->
-                        <div class="group flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                                    <i data-lucide="instagram" class="w-6 h-6"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-white">Instagram</h4>
-                                    <p class="text-xs text-gray-400">Post Reels and Stories</p>
-                                </div>
-                            </div>
-                            <button id="btn-ig" onclick="connectAccount('ig')" class="px-4 py-1.5 rounded-full bg-electric text-obsidian text-sm font-bold hover:bg-goldlight transition-colors">
-                                Connect
-                            </button>
-                        </div>
-
-                        <!-- X / Twitter -->
-                        <div class="group flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-gray-900 flex items-center justify-center border border-white/20 text-white group-hover:scale-110 transition-transform">
-                                    <i data-lucide="twitter" class="w-5 h-5"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-white">X (Twitter)</h4>
-                                    <p class="text-xs text-gray-400">Text & Media Posts</p>
-                                </div>
-                            </div>
-                            <button id="btn-x" onclick="connectAccount('x')" class="px-4 py-1.5 rounded-full bg-electric text-obsidian text-sm font-bold hover:bg-goldlight transition-colors">
-                                Connect
-                            </button>
-                        </div>
-
-                    </div>
+                    <div id="connect-error" role="alert" class="hidden mb-4 px-4 py-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 text-sm"></div>
+                    <div id="connect-list" class="space-y-3"></div>
 
                     <div class="mt-8 flex justify-between items-center">
-                        <button onclick="goToStep(3)" class="text-sm text-gray-500 hover:text-white transition-colors">Skip for now</button>
-                        <button onclick="goToStep(3)" class="gold-cta px-6 py-3 rounded-xl flex items-center gap-2">
+                        <a href="dashboard.html" class="text-sm text-gray-500 hover:text-white transition-colors">Skip for now</a>
+                        <a href="dashboard.html" class="gold-cta px-6 py-3 rounded-xl flex items-center gap-2">
                             Go to Dashboard
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
+                        </a>
                     </div>
                 </div>
 
@@ -273,7 +210,7 @@
                     </div>
                     
                     <h2 class="text-3xl font-bold mb-4">You're all set!</h2>
-                    <p class="text-gray-400 mb-8 max-w-sm mx-auto">Your workstation is ready to accept commands. Booting up the ComfyUI API link...</p>
+                    <p class="text-gray-400 mb-8 max-w-sm mx-auto">Taking you to your dashboard...</p>
                     
                     <div class="w-full max-w-xs h-1.5 bg-gray-800 rounded-full overflow-hidden">
                         <div class="h-full bg-gradient-to-r from-electric to-goldlight w-full animate-[progress_2s_ease-in-out]"></div>
@@ -292,50 +229,134 @@
 
     <!-- Small Footer -->
     <div class="fixed bottom-4 text-center w-full z-0 pointer-events-none">
-        <p class="text-xs text-gray-600">Secure AES-256 Encryption • OAuth 2.0</p>
+        <p class="text-xs text-gray-600">OAuth 2.0 • Platform tokens encrypted at rest</p>
     </div>
 
+    <script src="app.js"></script>
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+    (function () {
+        'use strict';
+        var N = window.NEUTX;
+        var mode = N.query('mode') === 'login' ? 'login' : 'signup';
+        var next = N.query('next');
+        var safeNext = next && /^[a-z]+\.html(\?[^#]*)?$/.test(next) ? next : 'dashboard.html';
 
-        // Step Navigation Logic
-        function goToStep(stepNumber) {
-            // Hide all steps
-            document.querySelectorAll('.step').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Show targeted step
-            const targetStep = document.getElementById(`step-${stepNumber}`);
-            targetStep.classList.add('active');
+        function goToStep(n) {
+            document.querySelectorAll('.step').forEach(function (el) { el.classList.remove('active'); });
+            document.getElementById('step-' + n).classList.add('active');
+            if (n === 3) setTimeout(function () { location.href = safeNext; }, 900);
+        }
 
-            // If it's the final success step, simulate redirect
-            if(stepNumber === 3) {
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2500);
+        function setMode(m) {
+            mode = m;
+            var login = m === 'login';
+            document.getElementById('auth-title').textContent = login ? 'Welcome back' : 'Create an account';
+            document.getElementById('auth-subtitle').textContent = login ? 'Sign in to your NEUTX studio.' : 'Start automating your social media with AI.';
+            document.getElementById('auth-submit-label').textContent = login ? 'Log In' : 'Create Account';
+            document.getElementById('auth-switch-text').textContent = login ? 'New to NEUTX?' : 'Already have an account?';
+            document.getElementById('auth-switch').textContent = login ? 'Create an account' : 'Log in';
+            document.getElementById('name-field').classList.toggle('hidden', login);
+            var pw = document.getElementById('auth-password');
+            pw.autocomplete = login ? 'current-password' : 'new-password';
+            pw.placeholder = login ? 'Your password' : 'At least 10 characters';
+            showError('');
+        }
+
+        function showError(msg) {
+            var el = document.getElementById('auth-error');
+            el.textContent = msg;
+            el.classList.toggle('hidden', !msg);
+        }
+
+        document.getElementById('auth-switch').addEventListener('click', function (e) {
+            e.preventDefault();
+            setMode(mode === 'login' ? 'signup' : 'login');
+        });
+
+        document.getElementById('auth-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var btn = document.getElementById('auth-submit');
+            var body = {
+                email: document.getElementById('auth-email').value.trim(),
+                password: document.getElementById('auth-password').value
+            };
+            if (mode === 'signup') {
+                body.name = document.getElementById('auth-name').value.trim();
+                body.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+                if (body.password.length < 10) { showError('Use a password of at least 10 characters.'); return; }
             }
+            btn.disabled = true;
+            btn.classList.add('opacity-70');
+            try {
+                await N.api('/api/auth/' + mode, { body: body, allow401: true });
+                if (mode === 'signup') { await renderConnect(); goToStep(2); } else { goToStep(3); }
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70');
+            }
+        });
+
+        async function renderConnect() {
+            var list = document.getElementById('connect-list');
+            var platforms = await N.api('/api/platforms');
+            var accounts = await N.api('/api/accounts');
+            list.innerHTML = platforms.map(function (p) {
+                var meta = N.platforms[p.key];
+                var connected = accounts.filter(function (a) { return a.platform === p.key; });
+                var action = connected.length
+                    ? '<span class="px-3 py-1.5 rounded-full bg-white/10 text-cloud border border-green-500/50 text-sm font-bold inline-flex items-center gap-1"><i data-lucide="check" class="w-4 h-4 text-green-400"></i> Connected</span>'
+                    : p.configured
+                        ? '<button type="button" data-connect="' + N.esc(p.key) + '" class="px-4 py-1.5 rounded-full bg-electric text-obsidian text-sm font-bold hover:bg-goldlight transition-colors">Connect</button>'
+                        : '<span class="text-xs text-gray-500 text-right max-w-[9rem]">Not configured on this server</span>';
+                var sub = connected.length ? '@' + connected[0].username : (p.media_kinds.indexOf('image') >= 0 ? 'Videos and images' : 'Videos');
+                return '<div class="flex items-center justify-between p-4 rounded-xl border border-white/10 bg-white/5">' +
+                    '<div class="flex items-center gap-4">' + N.platformBadge(p.key, 'w-12 h-12 !rounded-full') +
+                    '<div><h4 class="font-bold text-white">' + N.esc(meta.label) + '</h4><p class="text-xs text-gray-400">' + N.esc(sub) + '</p></div></div>' +
+                    action + '</div>';
+            }).join('');
+            N.icons();
         }
 
-        // Mock Account Connection Logic
-        function connectAccount(platformId) {
-            const btn = document.getElementById(`btn-${platformId}`);
-            
-            // Simulate loading
-            const originalText = btn.innerHTML;
+        document.getElementById('connect-list').addEventListener('click', async function (e) {
+            var btn = e.target.closest('[data-connect]');
+            if (!btn) return;
+            btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
-            lucide.createIcons();
-            btn.classList.add('pointer-events-none', 'opacity-80');
+            N.icons();
+            try {
+                var res = await N.api('/api/oauth/' + btn.dataset.connect + '/start', { body: { return_to: 'auth.html' } });
+                location.href = res.url;
+            } catch (err) {
+                var box = document.getElementById('connect-error');
+                box.textContent = err.message;
+                box.classList.remove('hidden');
+                renderConnect();
+            }
+        });
 
-            // Simulate OAuth Return
-            setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-400 mr-1"></i> Connected';
-                btn.classList.remove('bg-electric', 'text-obsidian', 'hover:bg-goldlight');
-                btn.classList.add('bg-white/10', 'text-cloud', 'border', 'border-green-500/50');
-                lucide.createIcons();
-            }, 1200);
-        }
+        // Coming back from an OAuth redirect, or already signed in.
+        (async function init() {
+            setMode(mode);
+            N.icons();
+            var connected = N.query('connected'), error = N.query('error');
+            if (connected || (error && N.query('step') !== '1')) {
+                try {
+                    await N.api('/api/auth/me', { allow401: true });
+                    await renderConnect();
+                    goToStep(2);
+                    if (error) {
+                        var box = document.getElementById('connect-error');
+                        box.textContent = error;
+                        box.classList.remove('hidden');
+                    }
+                    return;
+                } catch (e) { /* not signed in: stay on step 1 */ }
+            }
+            if (error) showError(error);
+        })();
+    })();
     </script>
 </body>
 </html>

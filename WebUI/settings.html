@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -197,7 +198,7 @@
 
         <!-- Sign out -->
         <div class="p-4 border-t border-white/5">
-            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+            <button type="button" data-action="sign-out" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
                 <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
                 Sign out
             </button>
@@ -222,21 +223,9 @@
 
             <!-- Right Actions -->
             <div class="flex items-center gap-4 ml-auto">
-                <button onclick="resetChanges()" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    Reset
-                </button>
-                <button onclick="saveChanges(this)" id="save-btn" class="gold-cta hidden sm:flex items-center gap-2 px-5 py-2 rounded-full text-sm glow-elev">
-                    <i data-lucide="check" class="w-4 h-4"></i>
-                    Save Changes
-                </button>
-                <button class="p-2 rounded-full text-gray-400 hover:text-electric hover:bg-white/10 transition-colors relative">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <div class="h-8 w-px bg-white/10 mx-1"></div>
-                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
-                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                <button type="button" onclick="window.location.href='settings.html'" title="Account settings" class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span data-user-name class="text-sm font-medium text-gray-300 hidden sm:block"></span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm" data-user-initial></div>
                 </button>
             </div>
         </header>
@@ -248,37 +237,21 @@
                 <!-- Page Header -->
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
-                        <p class="mono-label mb-2">Workspace Configuration</p>
+                        <p class="mono-label mb-2">Account</p>
                         <h1 class="text-3xl font-bold text-cloud mb-1">Settings</h1>
-                        <p class="text-gray-400">Tune your profile, defaults, billing, and security in one place.</p>
-                    </div>
-                    <div class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10">
-                        <i data-lucide="save" class="w-4 h-4 text-gray-500"></i>
-                        <span class="text-xs font-mono uppercase tracking-wider text-gray-400">Auto-saved <span class="text-electric">2 minutes ago</span></span>
+                        <p class="text-gray-400">Your profile, posting defaults and security.</p>
                     </div>
                 </div>
 
-                <!-- 2-column layout: sticky in-page nav (left) + sections (right) -->
                 <div class="grid lg:grid-cols-[220px_1fr] gap-8 lg:gap-12">
-
-                    <!-- Sticky Section Nav -->
                     <aside class="hidden lg:block">
                         <div class="sticky top-2 space-y-1">
                             <p class="mono-label px-3 mb-3">Jump to section</p>
                             <a href="#sec-profile" class="section-nav-link active" data-section="sec-profile">
                                 <i data-lucide="user" class="w-4 h-4"></i> Profile
                             </a>
-                            <a href="#sec-workspace" class="section-nav-link" data-section="sec-workspace">
-                                <i data-lucide="briefcase" class="w-4 h-4"></i> Workspace
-                            </a>
-                            <a href="#sec-notifications" class="section-nav-link" data-section="sec-notifications">
-                                <i data-lucide="bell" class="w-4 h-4"></i> Notifications
-                            </a>
                             <a href="#sec-defaults" class="section-nav-link" data-section="sec-defaults">
                                 <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Posting Defaults
-                            </a>
-                            <a href="#sec-billing" class="section-nav-link" data-section="sec-billing">
-                                <i data-lucide="credit-card" class="w-4 h-4"></i> Billing &amp; Usage
                             </a>
                             <a href="#sec-security" class="section-nav-link" data-section="sec-security">
                                 <i data-lucide="shield-check" class="w-4 h-4"></i> Security
@@ -289,10 +262,7 @@
                         </div>
                     </aside>
 
-                    <!-- Sections -->
                     <div class="space-y-10 min-w-0">
-
-                        <!-- ============ 01 — PROFILE ============ -->
                         <section id="sec-profile" class="scroll-mt-6">
                             <div class="mb-5">
                                 <p class="mono-label mb-1">Section 01</p>
@@ -300,653 +270,155 @@
                                     <i data-lucide="user" class="w-5 h-5 text-electric"></i>
                                     Profile
                                 </h2>
-                                <p class="text-sm text-gray-400 mt-1">Your personal identity and login credentials.</p>
+                                <p class="text-sm text-gray-400 mt-1">Your personal details and login credentials.</p>
                             </div>
-
-                            <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
-                                <!-- Avatar row -->
+                            <form id="profile-form" class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6" novalidate>
                                 <div class="flex items-center gap-5">
-                                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-extrabold text-3xl shrink-0 shadow-[0_0_30px_-8px_rgba(229,185,108,0.4)]">N</div>
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="text-base font-bold text-cloud mb-1">Profile Picture</h3>
-                                        <p class="text-xs text-gray-500 mb-3 font-mono">PNG / JPG · Square · Max 2 MB</p>
-                                        <div class="flex items-center gap-2">
-                                            <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cloud text-xs font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-1.5">
-                                                <i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload
-                                            </button>
-                                            <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-semibold hover:text-red-400 hover:border-red-500/30 transition-colors flex items-center gap-1.5">
-                                                <i data-lucide="x" class="w-3.5 h-3.5"></i> Remove
-                                            </button>
-                                        </div>
+                                    <div data-user-initial class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-extrabold text-3xl shrink-0 shadow-[0_0_30px_-8px_rgba(229,185,108,0.4)]"></div>
+                                    <div class="min-w-0">
+                                        <h3 class="text-base font-bold text-cloud mb-1" data-user-name></h3>
+                                        <p id="member-since" class="text-xs text-gray-500 font-mono"></p>
                                     </div>
                                 </div>
-
                                 <div class="h-px bg-white/5"></div>
-
-                                <!-- Name + Email -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Full Name</label>
-                                        <input type="text" value="Neutron Falcon" class="bridge-input w-full rounded-xl py-3 px-4 text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Email Address</label>
+                                    <div><label for="f-name" class="block text-sm font-semibold text-gray-300 mb-1.5">Full Name</label><input id="f-name" type="text" maxlength="80" autocomplete="name" class="w-full bridge-input rounded-xl py-3 px-4 text-sm"></div>
+                                    <div><label for="f-email" class="block text-sm font-semibold text-gray-300 mb-1.5">Email Address</label><input id="f-email" type="email" autocomplete="email" class="w-full bridge-input rounded-xl py-3 px-4 text-sm"></div>
+                                    <div class="md:col-span-2"><label for="f-timezone" class="block text-sm font-semibold text-gray-300 mb-1.5">Timezone</label>
                                         <div class="relative">
-                                            <input type="email" value="user@example.com" class="bridge-input w-full rounded-xl py-3 pl-4 pr-24 text-sm">
-                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/30 text-[10px] font-mono uppercase tracking-wider">Verified</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Password row -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-1.5">Password</label>
-                                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                                        <input type="password" value="••••••••••••" disabled class="bridge-input flex-1 rounded-xl py-3 px-4 text-sm font-mono opacity-70 cursor-not-allowed">
-                                        <button class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-2 shrink-0">
-                                            <i data-lucide="key-round" class="w-4 h-4"></i> Change Password
-                                        </button>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-2 font-mono">Last changed 47 days ago</p>
-                                </div>
-
-                                <!-- Locale + Timezone -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Language</label>
-                                        <div class="relative">
-                                            <select class="bridge-input w-full rounded-xl py-3 pl-4 pr-10 text-sm appearance-none cursor-pointer">
-                                                <option>English (US)</option>
-                                                <option>English (UK)</option>
-                                                <option>Bahasa Malaysia</option>
-                                                <option>日本語</option>
-                                                <option>Español</option>
-                                                <option>Português (BR)</option>
-                                            </select>
+                                            <select id="f-timezone" class="w-full bridge-input rounded-xl py-3 px-4 text-sm appearance-none cursor-pointer pr-10"></select>
                                             <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Timezone</label>
-                                        <div class="relative">
-                                            <select class="bridge-input w-full rounded-xl py-3 pl-4 pr-10 text-sm appearance-none cursor-pointer">
-                                                <option>UTC (UTC+0)</option>
-                                                <option>America/Los_Angeles (UTC-8)</option>
-                                                <option>America/New_York (UTC-5)</option>
-                                                <option>Europe/London (UTC+0)</option>
-                                                <option>Europe/Berlin (UTC+1)</option>
-                                                <option>Asia/Tokyo (UTC+9)</option>
-                                            </select>
-                                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
-                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1.5">Scheduled times and the calendar use this time zone.</p>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="gold-cta px-6 py-2.5 rounded-xl text-sm flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Profile</button>
+                                </div>
+                            </form>
+
+                            <form id="password-form" class="glass-panel rounded-2xl p-6 sm:p-8 mt-4 space-y-5" novalidate>
+                                <div class="flex items-center justify-between gap-4">
+                                    <h3 class="text-base font-bold text-cloud">Change Password</h3>
+                                    <p id="pw-changed" class="text-xs text-gray-500 font-mono"></p>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div><label for="f-pw-current" class="block text-sm font-semibold text-gray-300 mb-1.5">Current Password</label><input id="f-pw-current" type="password" autocomplete="current-password" class="w-full bridge-input rounded-xl py-3 px-4 text-sm"></div>
+                                    <div><label for="f-pw-new" class="block text-sm font-semibold text-gray-300 mb-1.5">New Password</label><input id="f-pw-new" type="password" minlength="10" autocomplete="new-password" placeholder="At least 10 characters" class="w-full bridge-input rounded-xl py-3 px-4 text-sm"></div>
+                                </div>
+                                <div class="flex justify-between items-center gap-4">
+                                    <p class="text-xs text-gray-500">Changing your password signs out all other sessions.</p>
+                                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors">Update Password</button>
+                                </div>
+                            </form>
                         </section>
 
-                        <!-- ============ 02 — WORKSPACE ============ -->
-                        <section id="sec-workspace" class="scroll-mt-6">
-                            <div class="mb-5">
-                                <p class="mono-label mb-1">Section 02</p>
-                                <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
-                                    <i data-lucide="briefcase" class="w-5 h-5 text-electric"></i>
-                                    Workspace
-                                </h2>
-                                <p class="text-sm text-gray-400 mt-1">Defaults that apply to every render and post in this workspace.</p>
-                            </div>
-
-                            <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-1.5">Workspace Name</label>
-                                    <input type="text" value="Neutron Studio" class="bridge-input w-full rounded-xl py-3 px-4 text-sm">
-                                    <p class="text-xs text-gray-500 mt-2 font-mono">Shown in invoices, exports, and webhook payloads.</p>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Default Render Engine</label>
-                                        <div class="relative">
-                                            <select class="bridge-input w-full rounded-xl py-3 pl-4 pr-10 text-sm appearance-none cursor-pointer">
-                                                <option>Wan 2.1 (14B) — Cinematic</option>
-                                                <option selected>LTX-2.3 — Fast Social</option>
-                                                <option>Flux.1 [dev] — Image only</option>
-                                                <option>Auto-select</option>
-                                            </select>
-                                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Default Aspect Ratio</label>
-                                        <div class="relative">
-                                            <select class="bridge-input w-full rounded-xl py-3 pl-4 pr-10 text-sm appearance-none cursor-pointer">
-                                                <option selected>9:16 — Vertical (TikTok / Reels)</option>
-                                                <option>1:1 — Square (Feed)</option>
-                                                <option>16:9 — Landscape (YouTube)</option>
-                                            </select>
-                                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="h-px bg-white/5"></div>
-
-                                <!-- Brand color -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Brand Accent Color</label>
-                                    <p class="text-xs text-gray-500 mb-3 font-mono">Used for end cards, captions, and watermark glow.</p>
-                                    <div class="flex items-center gap-3 flex-wrap">
-                                        <button class="color-swatch active" style="background:#E5B96C" title="Electric Gold (Default)"></button>
-                                        <button class="color-swatch" style="background:#A855F7" title="Purple"></button>
-                                        <button class="color-swatch" style="background:#06B6D4" title="Cyan"></button>
-                                        <button class="color-swatch" style="background:#10B981" title="Emerald"></button>
-                                        <button class="color-swatch" style="background:#EC4899" title="Pink"></button>
-                                        <button class="color-swatch" style="background:#3B82F6" title="Blue"></button>
-                                        <div class="h-6 w-px bg-white/10 mx-1"></div>
-                                        <input type="text" value="#E5B96C" class="bridge-input rounded-lg py-1.5 px-3 text-xs font-mono w-28">
-                                    </div>
-                                </div>
-
-                                <div class="h-px bg-white/5"></div>
-
-                                <!-- Watermark -->
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="text-sm font-bold text-cloud mb-1">Apply Watermark</h3>
-                                        <p class="text-xs text-gray-400">Burn a small NEUTX/brand mark into the bottom-right of every rendered video.</p>
-                                    </div>
-                                    <label class="toggle-switch mt-1">
-                                        <input type="checkbox" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase tracking-wider text-gray-500 mb-2">Watermark opacity <span class="text-electric">38%</span></label>
-                                    <input type="range" min="0" max="100" value="38" class="w-full accent-electric h-1 rounded-full bg-white/10">
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- ============ 03 — NOTIFICATIONS ============ -->
-                        <section id="sec-notifications" class="scroll-mt-6">
-                            <div class="mb-5">
-                                <p class="mono-label mb-1">Section 03</p>
-                                <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
-                                    <i data-lucide="bell" class="w-5 h-5 text-electric"></i>
-                                    Notifications
-                                </h2>
-                                <p class="text-sm text-gray-400 mt-1">Choose how NEUTX keeps you informed.</p>
-                            </div>
-
-                            <div class="glass-panel rounded-2xl divide-y divide-white/5 overflow-hidden">
-
-                                <div class="p-5 sm:p-6 flex items-center justify-between gap-4">
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-10 h-10 rounded-xl bg-electric/10 border border-electric/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="check-circle-2" class="w-5 h-5 text-electric"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud">Render finished</h4>
-                                            <p class="text-xs text-gray-400 mt-0.5">Get notified when an AI render finishes and is ready to review.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-4 shrink-0">
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Email</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Push</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 sm:p-6 flex items-center justify-between gap-4">
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-10 h-10 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="send" class="w-5 h-5 text-green-400"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud">Post published</h4>
-                                            <p class="text-xs text-gray-400 mt-0.5">When a scheduled post successfully goes live on a connected platform.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-4 shrink-0">
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Email</span>
-                                            <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
-                                        </label>
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Push</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 sm:p-6 flex items-center justify-between gap-4">
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud">Render failed</h4>
-                                            <p class="text-xs text-gray-400 mt-0.5">Critical errors, OOM events, or platform API rejections.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-4 shrink-0">
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Email</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Push</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 sm:p-6 flex items-center justify-between gap-4">
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="bar-chart-3" class="w-5 h-5 text-blue-400"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud">Weekly performance summary</h4>
-                                            <p class="text-xs text-gray-400 mt-0.5">Every Monday: post views, engagement deltas, and credits used.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-4 shrink-0">
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Email</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Push</span>
-                                            <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 sm:p-6 flex items-center justify-between gap-4">
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="key" class="w-5 h-5 text-yellow-400"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud">Token expiring soon</h4>
-                                            <p class="text-xs text-gray-400 mt-0.5">Reminders 7 / 3 / 1 days before a connected account's OAuth token expires.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-4 shrink-0">
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Email</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                        <label class="flex flex-col items-center gap-1">
-                                            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-gray-500">Push</span>
-                                            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- ============ 04 — POSTING DEFAULTS ============ -->
                         <section id="sec-defaults" class="scroll-mt-6">
                             <div class="mb-5">
-                                <p class="mono-label mb-1">Section 04</p>
+                                <p class="mono-label mb-1">Section 02</p>
                                 <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
                                     <i data-lucide="sliders-horizontal" class="w-5 h-5 text-electric"></i>
                                     Posting Defaults
                                 </h2>
                                 <p class="text-sm text-gray-400 mt-1">Pre-filled choices for every new post in the Generation Studio.</p>
                             </div>
-
-                            <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
-
-                                <!-- Default platforms -->
+                            <form id="defaults-form" class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6" novalidate>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-3">Default Target Platforms</label>
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-
-                                        <label class="choice-card active flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
-                                            <input type="checkbox" checked class="accent-electric w-4 h-4 rounded">
-                                            <div class="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-cloud border border-white/15 shrink-0">
-                                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                                            </div>
+                                    <p class="block text-sm font-semibold text-gray-300 mb-3">Default Target Platforms</p>
+                                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="platform-choices">
+                                        <label class="choice-card flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
+                                            <input type="checkbox" name="platform" value="tiktok" class="accent-electric w-4 h-4 rounded">
+                                            <span data-badge="tiktok"></span>
                                             <span class="text-sm font-semibold text-cloud">TikTok</span>
                                         </label>
-
-                                        <label class="choice-card active flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
-                                            <input type="checkbox" checked class="accent-electric w-4 h-4 rounded">
-                                            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white shrink-0">
-                                                <i data-lucide="instagram" class="w-4 h-4"></i>
-                                            </div>
+                                        <label class="choice-card flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
+                                            <input type="checkbox" name="platform" value="instagram" class="accent-electric w-4 h-4 rounded">
+                                            <span data-badge="instagram"></span>
                                             <span class="text-sm font-semibold text-cloud">Instagram</span>
                                         </label>
-
                                         <label class="choice-card flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
-                                            <input type="checkbox" class="accent-electric w-4 h-4 rounded">
-                                            <div class="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center text-cloud border border-white/15 shrink-0">
-                                                <i data-lucide="twitter" class="w-3.5 h-3.5"></i>
-                                            </div>
-                                            <span class="text-sm font-semibold text-cloud">X (Twitter)</span>
+                                            <input type="checkbox" name="platform" value="x" class="accent-electric w-4 h-4 rounded">
+                                            <span data-badge="x"></span>
+                                            <span class="text-sm font-semibold text-cloud">X</span>
                                         </label>
-
                                         <label class="choice-card flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer">
-                                            <input type="checkbox" class="accent-electric w-4 h-4 rounded">
-                                            <div class="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center shrink-0">
-                                                <i data-lucide="youtube" class="w-4 h-4 text-red-500"></i>
-                                            </div>
+                                            <input type="checkbox" name="platform" value="youtube" class="accent-electric w-4 h-4 rounded">
+                                            <span data-badge="youtube"></span>
                                             <span class="text-sm font-semibold text-cloud">YouTube</span>
                                         </label>
                                     </div>
+                                    <p class="text-xs text-gray-500 mt-2">Pre-selected in the Studio when these accounts are connected. Leave all unchecked to pre-select every connected account.</p>
                                 </div>
-
-                                <div class="h-px bg-white/5"></div>
-
-                                <!-- Default schedule time + template -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Default Publish Time</label>
-                                        <div class="relative">
-                                            <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
-                                            <input type="time" value="15:00" class="bridge-input w-full rounded-xl py-3 pl-10 pr-4 text-sm font-mono" style="color-scheme: dark;">
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-2 font-mono">Local timezone · UTC</p>
+                                    <div><label for="f-time" class="block text-sm font-semibold text-gray-300 mb-1.5">Default Publish Time</label>
+                                        <input id="f-time" type="time" class="w-full bridge-input rounded-xl py-3 px-4 text-sm" style="color-scheme: dark;">
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-300 mb-1.5">Default Template</label>
+                                    <div><label for="f-template" class="block text-sm font-semibold text-gray-300 mb-1.5">Default Template</label>
                                         <div class="relative">
-                                            <select class="bridge-input w-full rounded-xl py-3 pl-4 pr-10 text-sm appearance-none cursor-pointer">
-                                                <option selected>Cinematic Vibe (My Templates)</option>
-                                                <option>TikTok Trend (System)</option>
-                                                <option>Cinematic Mood (System)</option>
-                                                <option>None — choose every time</option>
-                                            </select>
+                                            <select id="f-template" class="w-full bridge-input rounded-xl py-3 px-4 text-sm appearance-none cursor-pointer pr-10"></select>
                                             <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="h-px bg-white/5"></div>
-
-                                <!-- Caption style -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-3">AI Caption Style</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                        <label class="choice-card flex flex-col p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer" onclick="toggleChoice(this, 'caption')">
-                                            <i data-lucide="message-square-quote" class="w-5 h-5 text-electric mb-2"></i>
-                                            <span class="text-sm font-bold text-cloud mb-0.5">Punchy</span>
-                                            <span class="text-xs text-gray-400">Short hooks, 1–2 emoji, viral lean.</span>
-                                        </label>
-                                        <label class="choice-card active flex flex-col p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer" onclick="toggleChoice(this, 'caption')">
-                                            <i data-lucide="feather" class="w-5 h-5 text-electric mb-2"></i>
-                                            <span class="text-sm font-bold text-cloud mb-0.5">Cinematic</span>
-                                            <span class="text-xs text-gray-400">Atmospheric, evocative, no emoji.</span>
-                                        </label>
-                                        <label class="choice-card flex flex-col p-4 rounded-xl border border-white/10 bg-white/5 cursor-pointer" onclick="toggleChoice(this, 'caption')">
-                                            <i data-lucide="hash" class="w-5 h-5 text-electric mb-2"></i>
-                                            <span class="text-sm font-bold text-cloud mb-0.5">SEO Heavy</span>
-                                            <span class="text-xs text-gray-400">8–12 hashtags, keyword-rich body.</span>
-                                        </label>
-                                    </div>
+                                <div><label for="f-hashtags" class="block text-sm font-semibold text-gray-300 mb-1.5">Standard Hashtags <span class="text-xs text-gray-500 font-mono ml-1">— pre-filled in every new caption</span></label>
+                                    <input id="f-hashtags" type="text" maxlength="500" placeholder="#aivideo #shortfilm" class="w-full bridge-input rounded-xl py-3 px-4 text-sm font-mono">
                                 </div>
-
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-300 mb-1.5">Standard Hashtags <span class="text-xs text-gray-500 font-mono ml-1">— appended to every post</span></label>
-                                    <input type="text" value="#aivideo #neutx #cinematic #shortfilm" class="bridge-input w-full rounded-xl py-3 px-4 text-sm font-mono">
+                                <div class="flex justify-end">
+                                    <button type="submit" class="gold-cta px-6 py-2.5 rounded-xl text-sm flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Defaults</button>
                                 </div>
-                            </div>
+                            </form>
                         </section>
 
-                        <!-- ============ 05 — BILLING & USAGE ============ -->
-                        <section id="sec-billing" class="scroll-mt-6">
-                            <div class="mb-5">
-                                <p class="mono-label mb-1">Section 05</p>
-                                <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
-                                    <i data-lucide="credit-card" class="w-5 h-5 text-electric"></i>
-                                    Billing &amp; Usage
-                                </h2>
-                                <p class="text-sm text-gray-400 mt-1">Plan, credits, and payment method.</p>
-                            </div>
-
-                            <!-- Plan card -->
-                            <div class="plan-card rounded-2xl p-6 sm:p-8 mb-4 relative overflow-hidden">
-                                <div class="absolute -top-10 -right-10 w-40 h-40 bg-electric/20 rounded-full blur-3xl pointer-events-none"></div>
-                                <div class="flex flex-col lg:flex-row lg:items-start gap-6 relative z-10">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="mono-label mb-2 text-electric">Current Plan</p>
-                                        <h3 class="text-3xl font-bold text-cloud mb-1">Pro</h3>
-                                        <p class="text-sm text-gray-400 mb-4">1,000 GPU-seconds/month · Unlimited templates · 100 GB storage</p>
-                                        <div class="flex items-baseline gap-1">
-                                            <span class="text-2xl font-extrabold text-electric">$49</span>
-                                            <span class="text-xs font-mono uppercase tracking-wider text-gray-400">/ month</span>
-                                            <span class="ml-3 text-xs text-gray-500 font-mono">Renews May 27, 2026</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0">
-                                        <button class="gold-cta px-5 py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
-                                            <i data-lucide="zap" class="w-4 h-4"></i> Upgrade to Team
-                                        </button>
-                                        <button class="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
-                                            <i data-lucide="x-circle" class="w-4 h-4"></i> Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Usage breakdown -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div class="glass-card p-5 rounded-2xl">
-                                    <p class="mono-label mb-2">GPU Credits</p>
-                                    <h3 class="text-2xl font-bold text-cloud">840<span class="text-base text-gray-500 font-normal">/1000</span></h3>
-                                    <div class="w-full h-1.5 bg-gray-800 rounded-full mt-3 overflow-hidden">
-                                        <div class="h-full bg-gradient-to-r from-electric to-goldlight" style="width:84%"></div>
-                                    </div>
-                                    <p class="text-[10px] text-gray-500 font-mono uppercase tracking-wider mt-2">Resets in 12 days</p>
-                                </div>
-                                <div class="glass-card p-5 rounded-2xl">
-                                    <p class="mono-label mb-2">Storage</p>
-                                    <h3 class="text-2xl font-bold text-cloud">42.8<span class="text-base text-gray-500 font-normal"> / 100 GB</span></h3>
-                                    <div class="w-full h-1.5 bg-gray-800 rounded-full mt-3 overflow-hidden">
-                                        <div class="h-full bg-gradient-to-r from-electric to-goldlight" style="width:43%"></div>
-                                    </div>
-                                    <p class="text-[10px] text-gray-500 font-mono uppercase tracking-wider mt-2">Soft cap · auto-archive after</p>
-                                </div>
-                                <div class="glass-card p-5 rounded-2xl">
-                                    <p class="mono-label mb-2">Renders this month</p>
-                                    <h3 class="text-2xl font-bold text-cloud">137</h3>
-                                    <p class="text-[10px] text-green-400 font-mono uppercase tracking-wider mt-3">+22 vs. last month</p>
-                                </div>
-                            </div>
-
-                            <!-- Payment method + Invoices -->
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                <div class="glass-panel rounded-2xl p-5">
-                                    <p class="mono-label mb-3">Payment Method</p>
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-14 h-9 rounded-md bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center shrink-0">
-                                            <span class="text-cloud font-extrabold text-xs tracking-widest">VISA</span>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-bold text-cloud font-mono">•••• •••• •••• 4242</p>
-                                            <p class="text-xs text-gray-500 font-mono uppercase tracking-wider mt-0.5">Expires 09 / 28</p>
-                                        </div>
-                                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cloud text-xs font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-1.5">
-                                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Update
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="glass-panel rounded-2xl p-5">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <p class="mono-label">Recent Invoices</p>
-                                        <button class="text-xs text-electric hover:text-goldlight font-mono uppercase tracking-wider">View all</button>
-                                    </div>
-                                    <div class="space-y-1.5 text-xs font-mono">
-                                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                            <span class="text-gray-400">Apr 27, 2026</span>
-                                            <span class="text-cloud">$49.00</span>
-                                            <span class="px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/30 text-[10px] uppercase tracking-wider">Paid</span>
-                                            <button class="text-gray-500 hover:text-electric"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
-                                        </div>
-                                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                            <span class="text-gray-400">Mar 27, 2026</span>
-                                            <span class="text-cloud">$49.00</span>
-                                            <span class="px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/30 text-[10px] uppercase tracking-wider">Paid</span>
-                                            <button class="text-gray-500 hover:text-electric"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
-                                        </div>
-                                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                            <span class="text-gray-400">Feb 27, 2026</span>
-                                            <span class="text-cloud">$49.00</span>
-                                            <span class="px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/30 text-[10px] uppercase tracking-wider">Paid</span>
-                                            <button class="text-gray-500 hover:text-electric"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- ============ 06 — SECURITY ============ -->
                         <section id="sec-security" class="scroll-mt-6">
                             <div class="mb-5">
-                                <p class="mono-label mb-1">Section 06</p>
+                                <p class="mono-label mb-1">Section 03</p>
                                 <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
                                     <i data-lucide="shield-check" class="w-5 h-5 text-electric"></i>
                                     Security
                                 </h2>
-                                <p class="text-sm text-gray-400 mt-1">2FA, active sessions, and audit log.</p>
+                                <p class="text-sm text-gray-400 mt-1">Devices currently signed in to your account.</p>
                             </div>
-
-                            <!-- 2FA card -->
-                            <div class="glass-panel rounded-2xl p-5 sm:p-6 mb-4">
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/30 flex items-center justify-center shrink-0">
-                                        <i data-lucide="smartphone" class="w-6 h-6 text-green-400"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <h4 class="text-sm font-bold text-cloud">Two-Factor Authentication</h4>
-                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/30 text-[10px] font-mono uppercase tracking-wider">
-                                                <i data-lucide="check" class="w-3 h-3"></i> Enabled
-                                            </span>
-                                        </div>
-                                        <p class="text-xs text-gray-400">Authenticator app · Last verified 6 hours ago.</p>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cloud text-xs font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-1.5">
-                                            <i data-lucide="key" class="w-3.5 h-3.5"></i> Recovery codes
-                                        </button>
-                                        <button class="px-3 py-1.5 rounded-lg bg-red-500/5 border border-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/15 transition-colors flex items-center gap-1.5">
-                                            <i data-lucide="x" class="w-3.5 h-3.5"></i> Disable
-                                        </button>
-                                    </div>
+                            <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                                <div class="flex items-center justify-between gap-4 mb-4">
+                                    <h3 class="text-base font-bold text-cloud">Active Sessions</h3>
+                                    <button type="button" id="revoke-others" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-semibold hover:text-red-400 hover:border-red-500/30 transition-colors">Sign out everywhere else</button>
                                 </div>
-                            </div>
-
-                            <!-- Active sessions -->
-                            <div class="glass-panel rounded-2xl overflow-hidden">
-                                <div class="p-5 border-b border-white/5 flex items-center justify-between">
-                                    <p class="mono-label">Active Sessions</p>
-                                    <button class="text-xs text-red-400 hover:text-red-300 font-mono uppercase tracking-wider flex items-center gap-1">
-                                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign out everywhere
-                                    </button>
-                                </div>
-
-                                <div class="divide-y divide-white/5">
-                                    <!-- Current -->
-                                    <div class="p-5 flex items-center gap-4">
-                                        <div class="w-10 h-10 rounded-xl bg-electric/10 border border-electric/30 flex items-center justify-center shrink-0">
-                                            <i data-lucide="laptop" class="w-5 h-5 text-electric"></i>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center gap-2 mb-0.5">
-                                                <h4 class="text-sm font-bold text-cloud truncate">macOS · Chrome 132</h4>
-                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-electric/10 text-electric border border-electric/30 text-[10px] font-mono uppercase tracking-wider">This device</span>
-                                            </div>
-                                            <p class="text-xs text-gray-500 font-mono">Local device · localhost · Active now</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-5 flex items-center gap-4">
-                                        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                                            <i data-lucide="smartphone" class="w-5 h-5 text-gray-400"></i>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud truncate mb-0.5">iOS · NEUTX Mobile 1.4</h4>
-                                            <p class="text-xs text-gray-500 font-mono">Local device · 8h ago</p>
-                                        </div>
-                                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-semibold hover:text-red-400 hover:border-red-500/30 transition-colors flex items-center gap-1.5">
-                                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Revoke
-                                        </button>
-                                    </div>
-
-                                    <div class="p-5 flex items-center gap-4">
-                                        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                                            <i data-lucide="terminal" class="w-5 h-5 text-gray-400"></i>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="text-sm font-bold text-cloud truncate mb-0.5">CLI · neutx-cli/0.8.2</h4>
-                                            <p class="text-xs text-gray-500 font-mono">Workstation @ localhost · 2 days ago</p>
-                                        </div>
-                                        <button class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-xs font-semibold hover:text-red-400 hover:border-red-500/30 transition-colors flex items-center gap-1.5">
-                                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Revoke
-                                        </button>
-                                    </div>
-                                </div>
+                                <div id="sessions" class="space-y-2"></div>
                             </div>
                         </section>
 
-                        <!-- ============ 07 — DANGER ZONE ============ -->
                         <section id="sec-danger" class="scroll-mt-6">
                             <div class="mb-5">
-                                <p class="mono-label mb-1 text-red-400">Section 07</p>
+                                <p class="mono-label mb-1">Section 04</p>
                                 <h2 class="text-xl font-bold text-cloud flex items-center gap-2">
-                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
+                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-electric"></i>
                                     Danger Zone
                                 </h2>
                                 <p class="text-sm text-gray-400 mt-1">Irreversible actions. Proceed with intention.</p>
                             </div>
-
-                            <div class="glass-panel rounded-2xl border border-red-500/20 overflow-hidden">
-
-                                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 border-b border-red-500/10">
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-bold text-cloud mb-1">Export all workspace data</h4>
-                                        <p class="text-xs text-gray-400">Generates a downloadable .zip containing every render, template, schedule and connection metadata in JSON. May take a few minutes.</p>
+                            <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-red-500/20 space-y-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-base font-bold text-cloud mb-1">Export your data</h3>
+                                        <p class="text-sm text-gray-400">Download a JSON file with your profile, templates, posts, connected account names and media list. Media files themselves can be downloaded from the Media Library.</p>
                                     </div>
-                                    <button class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-2 shrink-0">
-                                        <i data-lucide="download" class="w-4 h-4"></i> Request Export
-                                    </button>
+                                    <a href="/api/auth/export" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 transition-colors shrink-0 flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Export JSON</a>
                                 </div>
-
-                                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 border-b border-red-500/10">
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-bold text-cloud mb-1">Transfer workspace ownership</h4>
-                                        <p class="text-xs text-gray-400">Move all assets, billing, and connections to another verified NEUTX account. The new owner must accept within 7 days.</p>
+                                <div class="h-px bg-white/5"></div>
+                                <form id="delete-form" class="flex flex-col sm:flex-row sm:items-end justify-between gap-4" novalidate>
+                                    <div class="flex-1">
+                                        <h3 class="text-base font-bold text-red-300 mb-1">Delete account permanently</h3>
+                                        <p class="text-sm text-gray-400 mb-3">Removes your profile, media files, scheduled posts, templates and stored platform tokens. This cannot be undone.</p>
+                                        <label for="f-delete-pw" class="sr-only">Password</label>
+                                        <input id="f-delete-pw" type="password" autocomplete="current-password" placeholder="Confirm with your password" class="w-full max-w-sm bridge-input rounded-xl py-2.5 px-4 text-sm">
                                     </div>
-                                    <button class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors flex items-center gap-2 shrink-0">
-                                        <i data-lucide="user-cog" class="w-4 h-4"></i> Transfer
-                                    </button>
-                                </div>
-
-                                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 bg-red-500/5">
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-bold text-red-400 mb-1">Delete account permanently</h4>
-                                        <p class="text-xs text-gray-400">Removes your profile, all rendered media, scheduled posts, templates, and revokes every connected account. <span class="text-red-400 font-semibold">This cannot be undone.</span></p>
-                                    </div>
-                                    <button class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-sm font-bold hover:bg-red-500/25 transition-colors flex items-center gap-2 shrink-0">
-                                        <i data-lucide="trash-2" class="w-4 h-4"></i> Delete Account
-                                    </button>
-                                </div>
+                                    <button type="submit" class="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/40 text-red-300 text-sm font-semibold hover:bg-red-500/20 transition-colors shrink-0">Delete Account</button>
+                                </form>
                             </div>
                         </section>
 
                     </div>
                 </div>
-
                 <div class="h-20"></div>
             </div>
         </main>
@@ -977,74 +449,9 @@
         </a>
     </div>
 
+    <script src="app.js"></script>
+
     <script src="bridge.js"></script>
-    <script>
-        lucide.createIcons();
-
-        // Toggle visual state on choice cards (caption style mutually exclusive)
-        function toggleChoice(card, group) {
-            if (group === 'caption') {
-                card.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-            }
-        }
-
-        // Save Changes — visual confirmation flash, then revert
-        function saveChanges(btn) {
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Saving...';
-            btn.disabled = true;
-            lucide.createIcons();
-            setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Saved';
-                lucide.createIcons();
-                setTimeout(() => {
-                    btn.innerHTML = original;
-                    btn.disabled = false;
-                    lucide.createIcons();
-                }, 1600);
-            }, 1000);
-        }
-
-        function resetChanges() {
-            // Real implementation would revert the form state. For the prototype, no-op visual flash.
-            const btn = event.currentTarget;
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="rotate-ccw" class="w-4 h-4 animate-spin"></i> Resetting...';
-            lucide.createIcons();
-            setTimeout(() => { btn.innerHTML = orig; lucide.createIcons(); }, 800);
-        }
-
-        // Sticky in-page nav: highlight on scroll using IntersectionObserver
-        (function () {
-            const sections = document.querySelectorAll('section[id^="sec-"]');
-            const navLinks = document.querySelectorAll('.section-nav-link');
-            const scroller = document.getElementById('settings-scroll');
-
-            const setActive = (id) => {
-                navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) setActive(entry.target.id);
-                });
-            }, { root: scroller, rootMargin: '-20% 0px -70% 0px', threshold: 0 });
-
-            sections.forEach(s => observer.observe(s));
-
-            // Smooth scroll the inner scroll-container (not window) when clicking nav links
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const id = link.dataset.section;
-                    const target = document.getElementById(id);
-                    if (target && scroller) {
-                        scroller.scrollTo({ top: target.offsetTop - 24, behavior: 'smooth' });
-                    }
-                });
-            });
-        })();
-    </script>
+    <script src="settings.js"></script>
 </body>
 </html>

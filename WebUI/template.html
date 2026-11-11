@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -125,7 +126,7 @@
 
         <!-- Sign out -->
         <div class="p-4 border-t border-white/5">
-            <button onclick="window.location.href='auth.html'" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
+            <button type="button" data-action="sign-out" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-cloud text-sm font-semibold hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors group">
                 <i data-lucide="log-out" class="w-4 h-4 transition-transform group-hover:translate-x-0.5"></i>
                 Sign out
             </button>
@@ -154,13 +155,9 @@
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     New Post
                 </button>
-                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <div class="h-8 w-px bg-white/10 mx-1"></div>
-                <button class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
-                    <span class="text-sm font-medium text-gray-300 hidden sm:block">Neutron</span>
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">N</div>
+                <button type="button" onclick="window.location.href='settings.html'" title="Account settings" class="flex items-center gap-2 p-1 pl-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+                    <span data-user-name class="text-sm font-medium text-gray-300 hidden sm:block"></span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm" data-user-initial></div>
                 </button>
             </div>
         </header>
@@ -170,8 +167,8 @@
             <div class="max-w-6xl mx-auto">
                 
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-white mb-2">Build Custom Template</h1>
-                    <p class="text-gray-400">Configure default parameters to save time during content creation. We'll abstract these into a ComfyUI JSON payload.</p>
+                    <h1 id="tpl-heading" class="text-3xl font-bold text-white mb-2">Build Custom Template</h1>
+                    <p class="text-gray-400">Save your favourite engine, format and prompt style. NEUTX fills the matching ComfyUI workflow with these settings every time you generate.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -187,11 +184,11 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-300 mb-1.5">Template Name</label>
-                                    <input type="text" placeholder="e.g., Cyberpunk TikTok Trend" value="My Cinematic Style" class="w-full bridge-input rounded-xl p-3 text-white">
+                                    <input id="tpl-name" type="text" required maxlength="80" placeholder="e.g., Cyberpunk TikTok Trend" class="w-full bridge-input rounded-xl p-3 text-white">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-300 mb-1.5">Description (Internal use)</label>
-                                    <input type="text" placeholder="What is this template best used for?" value="High quality 9:16 slow-motion b-roll for Instagram Reels." class="w-full bridge-input rounded-xl p-3 text-white text-sm">
+                                    <input id="tpl-desc" type="text" maxlength="300" placeholder="What is this template best used for?" class="w-full bridge-input rounded-xl p-3 text-white text-sm">
                                 </div>
                             </div>
                         </div>
@@ -206,14 +203,11 @@
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-300 mb-3">Base Model / Engine</label>
                                     <div class="relative">
-                                        <select class="w-full bridge-input rounded-xl p-4 text-white appearance-none cursor-pointer font-medium border-white/20">
-                                            <option>Wan 2.1 (14B) - Cinematic Video [Recommended]</option>
-                                            <option selected>LTX-2.3 - Fast Social Media Video</option>
-                                            <option>Flux.1 [dev] - High-Res Static Image</option>
-                                        </select>
+                                        <select id="tpl-workflow" aria-label="Base model / engine" class="w-full bridge-input rounded-xl p-4 text-white appearance-none cursor-pointer font-medium border-white/20"></select>
                                         <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"></i>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-2 ml-1">LTX-2.3 is highly optimized for rapid generation and natively understands portrait logic.</p>
+                                    <p id="tpl-workflow-desc" class="text-xs text-gray-500 mt-2 ml-1"></p>
+                                    <p id="tpl-workflow-models" class="text-xs mt-1 ml-1"></p>
                                 </div>
 
                                 <div>
@@ -221,7 +215,7 @@
                                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         
                                         <!-- Portrait -->
-                                        <div class="res-card active p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '9:16')">
+                                        <div role="radio" tabindex="0" data-aspect="9:16" class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all">
                                             <div class="w-10 h-16 border-2 border-current rounded mx-auto mb-3 text-electric group-hover:scale-105 transition-transform flex items-center justify-center">
                                                 <i data-lucide="smartphone" class="w-5 h-5"></i>
                                             </div>
@@ -230,7 +224,7 @@
                                         </div>
 
                                         <!-- Square -->
-                                        <div class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '1:1')">
+                                        <div role="radio" tabindex="0" data-aspect="1:1" class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all">
                                             <div class="w-12 h-12 border-2 border-current rounded mx-auto mb-5 mt-2 text-gray-500 group-hover:scale-105 transition-transform flex items-center justify-center">
                                                 <i data-lucide="instagram" class="w-5 h-5"></i>
                                             </div>
@@ -239,7 +233,7 @@
                                         </div>
 
                                         <!-- Landscape -->
-                                        <div class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all" onclick="selectResolution(this, '16:9')">
+                                        <div role="radio" tabindex="0" data-aspect="16:9" class="res-card p-4 rounded-xl border border-white/10 bg-black/40 cursor-pointer text-center group transition-all">
                                             <div class="w-16 h-10 border-2 border-current rounded mx-auto mb-6 mt-3 text-gray-500 group-hover:scale-105 transition-transform flex items-center justify-center">
                                                 <i data-lucide="monitor-play" class="w-5 h-5"></i>
                                             </div>
@@ -266,12 +260,12 @@
                             <div class="space-y-6">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-300 mb-2">Base Style Prompt (Appended)</label>
-                                    <textarea rows="3" class="w-full bridge-input rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono" placeholder="e.g. cinematic lighting, 8k resolution, highly detailed, octane render...">cinematic lighting, 8k resolution, highly detailed, slow motion, professional color grading, shot on RED camera</textarea>
+                                    <textarea id="tpl-style" maxlength="2000" rows="3" class="w-full bridge-input rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono" placeholder="e.g. cinematic lighting, 8k resolution, highly detailed, octane render...">cinematic lighting, 8k resolution, highly detailed, slow motion, professional color grading, shot on RED camera</textarea>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-300 mb-2 text-red-400">Universal Negative Prompt</label>
-                                    <textarea rows="3" class="w-full bridge-input rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono border-red-500/30 focus:border-red-500 focus:ring-1 focus:ring-red-500" placeholder="e.g. low quality, blurry, distorted text...">lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, distorted, glitch</textarea>
+                                    <textarea id="tpl-negative" maxlength="2000" rows="3" class="w-full bridge-input rounded-xl p-4 text-sm text-white placeholder-gray-600 resize-none font-mono border-red-500/30 focus:border-red-500 focus:ring-1 focus:ring-red-500" placeholder="e.g. low quality, blurry, distorted text...">lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, distorted, glitch</textarea>
                                 </div>
                             </div>
                         </div>
@@ -284,14 +278,17 @@
                             
                             <!-- Save Action Card -->
                             <div class="glass-panel p-6 rounded-2xl border border-electric/30 shadow-[0_0_40px_-10px_rgba(229,185,108,0.25)]">
-                                <h3 class="text-lg font-bold text-cloud mb-2">Ready to compile?</h3>
-                                <p class="text-xs text-gray-400 mb-6">Saving this template will generate a ComfyUI JSON workflow in the database, ready to be triggered via API.</p>
+                                <h3 class="text-lg font-bold text-cloud mb-2">Ready to save?</h3>
+                                <p class="text-xs text-gray-400 mb-6">Your template appears under "My Templates" in the Generation Studio.</p>
                                 
-                                <button onclick="saveTemplate()" class="gold-cta w-full py-3.5 rounded-xl flex items-center justify-center gap-2 mb-3">
+                                <button type="button" id="tpl-save" class="gold-cta w-full py-3.5 rounded-xl flex items-center justify-center gap-2 mb-3">
                                     <i data-lucide="save" class="w-4 h-4"></i> Save Template
                                 </button>
-                                <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-cloud font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors text-sm">
+                                <a href="studio.html?tab=mine" class="block text-center w-full py-3 rounded-xl bg-white/5 border border-white/10 text-cloud font-semibold hover:bg-white/10 hover:border-electric/30 transition-colors text-sm">
                                     Cancel
+                                </a>
+                                <button type="button" id="tpl-delete" class="hidden w-full mt-3 py-3 rounded-xl border border-red-500/30 text-red-300 font-semibold hover:bg-red-500/10 transition-colors text-sm">
+                                    Delete Template
                                 </button>
                             </div>
 
@@ -299,40 +296,15 @@
                             <div class="glass-panel rounded-2xl border border-white/5 overflow-hidden flex flex-col h-[350px]">
                                 <div class="bg-black/60 border-b border-white/5 p-3 flex items-center gap-2 shrink-0">
                                     <i data-lucide="file-json" class="w-4 h-4 text-gray-500"></i>
-                                    <span class="mono-label">Generated Payload Preview</span>
+                                    <span class="mono-label">Values sent to ComfyUI</span>
                                 </div>
                                 <div class="p-4 overflow-y-auto flex-1 bg-[#0d1117] font-mono text-[10px] sm:text-xs leading-relaxed">
-<pre><code><span class="text-gray-500">{</span>
-  <span class="json-key">"name"</span><span class="text-gray-500">:</span> <span class="json-str">"My Cinematic Style"</span><span class="text-gray-500">,</span>
-  <span class="json-key">"engine"</span><span class="text-gray-500">:</span> <span class="json-str">"LTX-2.3-FP8"</span><span class="text-gray-500">,</span>
-  <span class="json-key">"comfyui_workflow"</span><span class="text-gray-500">: {</span>
-    <span class="json-key">"3"</span><span class="text-gray-500">: {</span>
-      <span class="json-key">"class_type"</span><span class="text-gray-500">:</span> <span class="json-str">"KSampler"</span><span class="text-gray-500">,</span>
-      <span class="json-key">"inputs"</span><span class="text-gray-500">: {</span>
-        <span class="json-key">"seed"</span><span class="text-gray-500">:</span> <span class="json-val">-1</span><span class="text-gray-500">,</span>
-        <span class="json-key">"steps"</span><span class="text-gray-500">:</span> <span class="json-val">20</span><span class="text-gray-500">,</span>
-        <span class="json-key">"cfg"</span><span class="text-gray-500">:</span> <span class="json-val">3.5</span><span class="text-gray-500">,</span>
-        <span class="json-key">"sampler_name"</span><span class="text-gray-500">:</span> <span class="json-str">"euler"</span><span class="text-gray-500">,</span>
-        <span class="json-key">"scheduler"</span><span class="text-gray-500">:</span> <span class="json-str">"normal"</span>
-      <span class="text-gray-500">}</span>
-    <span class="text-gray-500">},</span>
-    <span class="json-key">"5"</span><span class="text-gray-500">: {</span>
-      <span class="json-key">"class_type"</span><span class="text-gray-500">:</span> <span class="json-str">"EmptyLatentVideo"</span><span class="text-gray-500">,</span>
-      <span class="json-key">"inputs"</span><span class="text-gray-500">: {</span>
-        <span class="json-key">"width"</span><span class="text-gray-500">:</span> <span id="json-w" class="json-val">1080</span><span class="text-gray-500">,</span>
-        <span class="json-key">"height"</span><span class="text-gray-500">:</span> <span id="json-h" class="json-val">1920</span><span class="text-gray-500">,</span>
-        <span class="json-key">"length"</span><span class="text-gray-500">:</span> <span class="json-val">48</span><span class="text-gray-500">,</span>
-        <span class="json-key">"batch_size"</span><span class="text-gray-500">:</span> <span class="json-val">1</span>
-      <span class="text-gray-500">}</span>
-    <span class="text-gray-500">}</span>
-    <span class="text-gray-500">// ... abstracted nodes ...</span>
-  <span class="text-gray-500">}</span>
-<span class="text-gray-500">}</span></code></pre>
+<pre><code id="tpl-preview" class="text-gray-300 whitespace-pre-wrap break-words"></code></pre>
                                 </div>
                             </div>
                             
                             <div class="text-center text-xs text-gray-500 flex items-center justify-center gap-1.5 mt-4">
-                                <i data-lucide="lock" class="w-3 h-3"></i> Safely encrypted in PostgreSQL
+                                <i data-lucide="database" class="w-3 h-3"></i> Stored in your NEUTX database
                             </div>
 
                         </div>
@@ -370,68 +342,9 @@
         </a>
     </div>
 
+    <script src="app.js"></script>
+
     <script src="bridge.js"></script>
-    <script>
-        lucide.createIcons();
-
-        // Handle Resolution Selection & update the mock JSON preview dynamically
-        function selectResolution(element, ratio) {
-            // Remove active classes from all cards
-            document.querySelectorAll('.res-card').forEach(el => {
-                el.classList.remove('active');
-                
-                // Reset icon colors
-                const iconContainer = el.querySelector('div');
-                iconContainer.classList.remove('text-electric');
-                iconContainer.classList.add('text-gray-500');
-            });
-
-            // Add active class to clicked card
-            element.classList.add('active');
-            
-            // Highlight icon
-            const iconContainer = element.querySelector('div');
-            iconContainer.classList.remove('text-gray-500');
-            iconContainer.classList.add('text-electric');
-
-            // Update JSON preview mock
-            const wNode = document.getElementById('json-w');
-            const hNode = document.getElementById('json-h');
-
-            if (ratio === '9:16') {
-                wNode.innerText = '1080';
-                hNode.innerText = '1920';
-            } else if (ratio === '1:1') {
-                wNode.innerText = '1080';
-                hNode.innerText = '1080';
-            } else if (ratio === '16:9') {
-                wNode.innerText = '1920';
-                hNode.innerText = '1080';
-            }
-        }
-
-        function saveTemplate() {
-            // Simple visual feedback for the prototype
-            const btn = document.querySelector('button[onclick="saveTemplate()"]');
-            const originalContent = btn.innerHTML;
-            
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Compiling...';
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Saved Successfully';
-                // Swap from gold CTA to green success state for the brief confirmation flash.
-                btn.classList.remove('gold-cta');
-                btn.classList.add('bg-gradient-to-r', 'from-green-600', 'to-emerald-500', 'text-white', 'font-bold');
-                btn.style.boxShadow = '0 0 30px -8px rgba(16, 185, 129, 0.55)';
-                lucide.createIcons();
-
-                // After the success state is visible, route back to the dashboard so the demo flow continues.
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 1200);
-        }
-    </script>
+    <script src="template.js"></script>
 </body>
 </html>

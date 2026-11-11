@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="bridge.css">
     <script>
         tailwind.config = {
@@ -91,13 +92,13 @@
                 <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
                     <a href="#features" class="hover:text-electric transition-colors">Features</a>
                     <a href="#how-it-works" class="hover:text-electric transition-colors">How it Works</a>
-                    <a href="#pricing" class="hover:text-electric transition-colors">Pricing</a>
+                    <a href="https://github.com/Neutron-Ltd/aisocial" class="hover:text-electric transition-colors">GitHub</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="window.location.href='auth.html'" class="text-sm font-medium text-gray-300 hover:text-electric transition-colors">Log in</button>
-                    <button onclick="window.location.href='auth.html'" class="gold-cta text-sm px-5 py-2 rounded-full">
+                    <a href="auth.html?mode=login" class="text-sm font-medium text-gray-300 hover:text-electric transition-colors">Log in</a>
+                    <a href="auth.html" class="gold-cta text-sm px-5 py-2 rounded-full">
                         Get Started
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -109,7 +110,7 @@
             
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-electric/30 bg-electric/10 text-electric text-xs font-mono uppercase tracking-wider mb-8 reveal shadow-[0_0_10px_rgba(229,185,108,0.2)]">
                 <span class="flex h-2 w-2 rounded-full bg-electric animate-pulse"></span>
-                Powered by Wan 2.1 &amp; LTX-Video
+                Powered by ComfyUI · Wan 2.1 · Flux
             </div>
 
             <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 reveal reveal-delay-1">
@@ -118,14 +119,14 @@
             </h1>
             
             <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-400 mx-auto mb-10 reveal reveal-delay-2">
-                Connect your accounts, choose a template, and let our cinematic AI generate and schedule high-quality vertical videos for you. No technical jargon required.
+                Connect your accounts, choose a template, and let your own ComfyUI workstation generate videos and images that NEUTX schedules and publishes for you. Open source and self-hosted.
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-4 reveal reveal-delay-3">
-                <button onclick="window.location.href='auth.html'" class="gold-cta px-8 py-4 text-base rounded-full glow-elev flex items-center justify-center gap-2">
-                    Start Generating for Free
+                <a href="auth.html" class="gold-cta px-8 py-4 text-base rounded-full glow-elev flex items-center justify-center gap-2">
+                    Start Generating
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </button>
+                </a>
                 <a href="#how-it-works" class="px-8 py-4 text-base font-bold rounded-full glass-panel text-cloud hover:bg-white/10 hover:text-electric transition-all flex items-center justify-center gap-2">
                     <i data-lucide="play-circle" class="w-5 h-5"></i>
                     See it in action
@@ -231,7 +232,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-3 text-cloud">Auto-Formatting</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Never worry about aspect ratios again. Select TikTok, and our AI automatically renders in native 9:16 portrait mode using LTX-2.3. No blurry cropping.
+                        Never worry about aspect ratios again. Pick 9:16, 1:1 or 16:9 and the workflow renders natively at that size. No blurry cropping.
                     </p>
                 </div>
 
@@ -242,7 +243,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-3 text-cloud">Cinematic Quality</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Under the hood, we use massive 14-Billion parameter models (like Wan 2.1) to give your videos perfect physics, realistic lighting, and smooth motion.
+                        Under the hood, NEUTX drives open models like Wan 2.1 and Flux through ComfyUI, so you get cinematic motion and lighting on your own GPU.
                     </p>
                 </div>
 
@@ -253,7 +254,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-3 text-cloud">Set it and Forget it</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Generate a week's worth of content in minutes. Drag and drop your generated posts onto the calendar, and we'll push them to official social APIs automatically.
+                        Schedule a week's worth of content in one sitting. Drag posts around the calendar, and NEUTX publishes them through the official TikTok, Instagram, YouTube and X APIs.
                     </p>
                 </div>
             </div>
@@ -268,7 +269,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20 reveal">
                 <h2 class="text-3xl md:text-5xl font-bold mb-4">A workflow that feels like magic.</h2>
-                <p class="text-gray-400 text-lg">No nodes. No VRAM errors. Just four simple steps.</p>
+                <p class="text-gray-400 text-lg">No nodes to wire. Just four simple steps.</p>
             </div>
 
             <div class="relative">
@@ -302,7 +303,7 @@
                             <i data-lucide="sparkles" class="w-10 h-10 text-goldlight"></i>
                         </div>
                         <h4 class="text-xl font-bold mb-2 text-white"><span class="text-goldlight mr-2 font-mono">3.</span>AI Generation</h4>
-                        <p class="text-sm text-gray-400">Our massive GPU cluster renders your video instantly. Review and regenerate if needed.</p>
+                        <p class="text-sm text-gray-400">Your ComfyUI workstation renders it. Review the result and regenerate if needed.</p>
                     </div>
 
                     <!-- Step 4 -->
@@ -311,7 +312,7 @@
                             <i data-lucide="calendar-check" class="w-10 h-10 text-gray-400"></i>
                         </div>
                         <h4 class="text-xl font-bold mb-2 text-white"><span class="text-gray-500 mr-2 font-mono">4.</span>Schedule</h4>
-                        <p class="text-sm text-gray-400">Pick your platforms (TikTok, X, IG) and drop it on the calendar. Done.</p>
+                        <p class="text-sm text-gray-400">Pick your platforms (TikTok, Instagram, YouTube, X) and a time. Done.</p>
                     </div>
                 </div>
             </div>
@@ -343,13 +344,15 @@
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-electric/20 to-goldlight/15 rounded-full blur-[80px] pointer-events-none -z-10"></div>
                 
                 <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Stop grinding.<br>Start generating.</h2>
-                <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">Join the beta today and get 100 free AI video generation credits. Let your personal workstation run your social media empire.</p>
+                <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">NEUTX is free, open source and runs on your own hardware. Let your workstation run your social media.</p>
                 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <input type="email" placeholder="Enter your email address" class="bridge-input w-full sm:w-auto min-w-[300px] px-6 py-4 rounded-full">
-                    <button onclick="window.location.href='auth.html'" class="gold-cta w-full sm:w-auto px-8 py-4 rounded-full whitespace-nowrap">
-                        Claim Early Access
-                    </button>
+                    <a href="auth.html" class="gold-cta w-full sm:w-auto px-8 py-4 rounded-full whitespace-nowrap">
+                        Create your account
+                    </a>
+                    <a href="https://github.com/Neutron-Ltd/aisocial" class="px-8 py-4 rounded-full glass-panel text-cloud hover:text-electric whitespace-nowrap">
+                        View on GitHub
+                    </a>
                 </div>
             </div>
         </div>
@@ -376,35 +379,32 @@
                 <div>
                     <h4 class="text-white font-semibold mb-4">Product</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-electric transition-colors">Features</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Integrations</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Pricing</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Changelog</a></li>
+                        <li><a href="#features" class="hover:text-electric transition-colors">Features</a></li>
+                        <li><a href="#how-it-works" class="hover:text-electric transition-colors">How it Works</a></li>
+                        <li><a href="auth.html" class="hover:text-electric transition-colors">Get Started</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-white font-semibold mb-4">Resources</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-electric transition-colors">Prompt Guide</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">ComfyUI Models</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Blog</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Community</a></li>
+                        <li><a href="https://github.com/Neutron-Ltd/aisocial" class="hover:text-electric transition-colors">Source Code</a></li>
+                        <li><a href="https://github.com/comfyanonymous/ComfyUI" class="hover:text-electric transition-colors">ComfyUI</a></li>
+                        <li><a href="https://github.com/Neutron-Ltd/aisocial/issues" class="hover:text-electric transition-colors">Report an Issue</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Legal</h4>
+                    <h4 class="text-white font-semibold mb-4">Project</h4>
                     <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-electric transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-electric transition-colors">Contact Us</a></li>
+                        <li><a href="https://github.com/Neutron-Ltd/aisocial/blob/main/LICENSE" class="hover:text-electric transition-colors">MIT License</a></li>
+                        <li><a href="https://github.com/Neutron-Ltd/aisocial/blob/main/SECURITY.md" class="hover:text-electric transition-colors">Security Policy</a></li>
+                        <li><a href="mailto:info@neutron.com.bd" class="hover:text-electric transition-colors">Contact</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-gray-600">© 2026 NEUTX Inc. All rights reserved.</p>
+                <p class="text-xs text-gray-600">© 2026 Neutron Ltd. Released under the MIT License.</p>
                 <div class="flex gap-4">
-                    <a href="#" class="text-gray-600 hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    <a href="https://github.com/Neutron-Ltd/aisocial" aria-label="Source code on GitHub" class="text-gray-600 hover:text-white transition-colors"><i data-lucide="code-2" class="w-5 h-5"></i></a>
                 </div>
             </div>
         </div>
