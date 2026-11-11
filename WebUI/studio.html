@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEUTX — Generation Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
+    <script src="config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="bridge.css">
@@ -375,7 +376,7 @@
                                     <!-- Terminal mock -->
                                     <div class="mt-6 p-3 rounded-lg bg-black/80 border border-white/5 text-left text-[10px] font-mono text-green-400/70 h-24 overflow-hidden relative">
                                         <div id="terminal-logs" class="absolute bottom-3 flex flex-col gap-1 transition-transform">
-                                            <span>> Initiating API connection to localhost:8188...</span>
+                                            <span>&gt; Initiating API connection to <span data-config="comfyui-host">localhost:8188</span>...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -607,7 +608,9 @@
             readyState.classList.add('hidden', 'opacity-0');
             bar.style.width = '0%';
             pct.innerText = '0%';
-            logs.innerHTML = '<span>> Initiating API connection to localhost:8188...</span>';
+            const initLine = document.createElement('span');
+            initLine.textContent = '> Initiating API connection to ' + window.NEUTX.comfyuiHost() + '...';
+            logs.replaceChildren(initLine);
 
             // Sequence Timing
             setTimeout(() => {

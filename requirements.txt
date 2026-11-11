@@ -1,0 +1,6 @@
+# The WebUI prototype and scripts/serve.py use only the Python standard
+# library (Python 3.8+). There are no third-party Python dependencies.
+#
+# ComfyUI is optional and not part of this repository. After running
+# scripts/setup_comfyui.sh, install its dependencies separately:
+#   pip install -r ComfyUI/requirements.txt

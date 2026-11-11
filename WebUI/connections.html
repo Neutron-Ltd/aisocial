@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEUTX — Connections</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@1.62.0/dist/umd/lucide.min.js" integrity="sha384-KbBG+Cdzk6eN6IszNtkSQeU6IJq84TBpyLQN+W8Fn8y0QNsTNiB+j8vFW5Rn1SGZ" crossorigin="anonymous"></script>
+    <script src="config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="bridge.css">
@@ -490,7 +491,7 @@
                                     <!-- Endpoint URL -->
                                     <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/40 border border-white/10 mb-3">
                                         <i data-lucide="link" class="w-3.5 h-3.5 text-gray-500 shrink-0"></i>
-                                        <code class="font-mono text-xs text-cloud truncate flex-1">http://localhost:8188</code>
+                                        <code data-config="comfyui-url" class="font-mono text-xs text-cloud truncate flex-1">http://localhost:8188</code>
                                         <button class="text-gray-500 hover:text-electric transition-colors" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
                                     </div>
 
